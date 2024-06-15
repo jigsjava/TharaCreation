@@ -1,0 +1,18 @@
+export const Grid = () => (
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    data-prefix="far"
+    data-icon="grid-2"
+    style={{ width: "20px", marginRight: "7px" }}
+    className="svg-inline--fa fa-grid-2 "
+    role="img"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+  >
+    <path
+      fill="currentColor"
+      d="M80 80v96h96V80H80zM32 80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H80c-26.5 0-48-21.5-48-48V80zM80 336v96h96V336H80zm-48 0c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H80c-26.5 0-48-21.5-48-48V336zM432 80H336v96h96V80zM336 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H336c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm0 304v96h96V336H336zm-48 0c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H336c-26.5 0-48-21.5-48-48V336z"
+    ></path>
+  </svg>
+);
