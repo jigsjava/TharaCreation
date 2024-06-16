@@ -37,7 +37,7 @@ const ProductListing = () => {
            </div>
         </div>
       ))}
-    </div>
+      </div>
     <button className="btn btn-success m-5" onClick={() =>{navigate("/producdetails")}}>ProductListing</button>
     </Container>
   );

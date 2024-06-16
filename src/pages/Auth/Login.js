@@ -3,7 +3,7 @@ import { Container, Row, Col, Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { useFormik } from "formik";
-import AxiosInstance from "../helpers/AxiosRequest";
+import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 
 
@@ -99,12 +99,16 @@ const Login = () => {
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
                     />
+                     <NavLink to={"/forgot"} className="linkCommon">
+                      Forgot PassWord ?
+                    </NavLink>
                     {form.touched.password && form.errors.password && (
                       <Form.Text className="font16Red">
                         {form.errors.password}
                       </Form.Text>
                     )}
                   </Form.Group>
+                 
                   <Form.Group className="mb-3 text-center">
                     {/* <Button
                     className="btn btn-secondary w-100"

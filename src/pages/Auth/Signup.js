@@ -11,7 +11,7 @@ import {
 import { Link, NavLink, Navigate, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import AxiosInstance from "../helpers/AxiosRequest";
+import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 
 

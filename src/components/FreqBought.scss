@@ -1,0 +1,108 @@
+.frequently-bought-together {
+    border: 1px solid #ddd;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+  
+    h2 {
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  
+    .products {
+      display: flex;
+      align-items: center;
+  
+      .product {
+        position: relative;
+        width: 250px;
+        text-align: center;
+  
+        img {
+          width: 100%;
+          border-radius: 8px;
+          height: 350px;
+        }
+  
+        .overlay {
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background: rgba(0, 0, 0, 0.5);
+          color: #fff;
+          opacity: 0;
+          transition: opacity 0.3s;
+  
+          span {
+            margin-bottom: 8px;
+          }
+  
+          input {
+            transform: scale(1.5);
+          }
+        }
+  
+        &:hover .overlay {
+          opacity: 1;
+        }
+  
+        p {
+          margin: 8px 0 4px;
+          font-size: 14px;
+          color: #333;
+        }
+  
+        .price {
+          font-size: 16px;
+          font-weight: bold;
+          color: #ff5722;
+        }
+      }
+  
+      .plus {
+        font-size: 24px;
+        margin: 0 16px;
+      }
+    }
+  
+    .price-summary {
+      margin-top: 16px;
+      border-top: 1px solid #ddd;
+      padding-top: 16px;
+  
+      p {
+        display: flex;
+        justify-content: space-between;
+        margin: 4px 0;
+  
+        span {
+          font-weight: bold;
+        }
+      }
+    }
+  
+    .add-to-cart-button {
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: #ff9800;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+  
+      &:hover {
+        background: #e68900;
+      }
+    }
+  }
+  
