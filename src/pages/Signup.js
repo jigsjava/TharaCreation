@@ -64,9 +64,9 @@ function Register() {
     <>
       <div className="userFormPage">
         <Container>
-          <Row className="justify-content-center">
-            <Col lg={6}>
-              <div className="Authbox">
+          <Row className="justify-content-center px-2" style={{minHeight:"100vh",alignItems:'center'}}>
+            <Col xl={4} lg={6} sm={11} style={{background:"#e7e7e7",borderRadius:'10px'}}>
+              <div className="Authbox mt-3">
                 <h2 className="text-center header mb-3">Sign Up</h2>
               
                 <Form onSubmit={form.handleSubmit}>
@@ -105,7 +105,7 @@ function Register() {
                       </Form.Text>
                     )}
                   </Form.Group>
-                  <Form.Group className="mb-4" controlId="">
+                  <Form.Group className="mb-3" controlId="">
                     <label>Password</label>
                     <Form.Control
                       type="password"
@@ -123,7 +123,7 @@ function Register() {
                     )}
                   </Form.Group>
 
-                  <Form.Group className="mb-4" controlId="">
+                  <Form.Group className="mb-5" controlId="">
                     <label>MobileNumber</label>
                     <Form.Control
                       type="number"

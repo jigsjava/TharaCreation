@@ -39,7 +39,7 @@ const Login = () => {
           localStorage.setItem("user", JSON.stringify(response.data));
           setIsLoading(false);
          
-          navigate("/dashboard");
+          navigate("/");
       
         } else {
           setIsLoading(false);
@@ -58,11 +58,18 @@ const Login = () => {
     <>
       <div className="userFormPage ">
         <Container>
-          <Row className="justify-content-center">
-            <Col lg={6}>
-              <div className="Authbox mt-5">
+          <Row
+            className="justify-content-center h-100 px-2"
+            style={{ minHeight: "100vh", alignItems: "center" }}
+          >
+            <Col
+              lg={4}
+              md={6}
+              sm={11}
+              style={{ background: "#e7e7e7", borderRadius: "10px" }}
+            >
+              <div className="Authbox mt-3">
                 <h2 className="text-center header mb-3">Login</h2>
-              
                 <Form onSubmit={form.handleSubmit}>
                   <Form.Group className="mb-3" controlId="">
                     <lable>Email</lable>
@@ -99,13 +106,15 @@ const Login = () => {
                     )}
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
-                    <Button
+                    {/* <Button
                     className="btn btn-secondary w-100"
                       disabled={form.isSubmitting || !form.isValid}
                       type="submit"
                     >
                       {form.isSubmitting ? <Spinner /> : "Login"}
-                    </Button>
+                    </Button> */}
+
+                    <Button className="btn btn-secondary w-100" onClick={() => {navigate("/")}}>Login</Button>
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
                     <span className="font16Blk">Don't have an account? </span>
