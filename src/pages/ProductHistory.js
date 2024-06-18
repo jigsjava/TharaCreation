@@ -10,7 +10,7 @@ const ProductHistory = () => {
     {
       name: 'Spotify Premium - 3M at Rs 119',
       status: 'Cancelled on Aug 08, 2023',
-      statusClass: 'cancelled',
+      statusclassName: 'cancelled',
       price: 'FREE',
       imageUrl: saree8,
       description: 'Shipment is cancelled',
@@ -18,7 +18,7 @@ const ProductHistory = () => {
     {
       name: 'TUPPERWARE - 1700 ml Polypropylene Groc...',
       status: 'Delivered on Sep 29, 2022',
-      statusClass: 'delivered',
+      statusclassName: 'delivered',
       price: '₹1,849',
       imageUrl: saree7,
       description: 'Your item has been delivered',
@@ -26,7 +26,7 @@ const ProductHistory = () => {
     {
       name: 'Wynona Wynona stainless steel rose gold ...',
       status: 'Delivered on May 19, 2022',
-      statusClass: 'delivered',
+      statusclassName: 'delivered',
       price: '₹290',
       imageUrl: saree6,
       description: 'Your item has been delivered',
@@ -46,7 +46,7 @@ const ProductHistory = () => {
             </div>
             <div className="product-details">
               <h3 className='mb-4'>{product.name.length > 25 ? `${product.name.slice(0, 25)}...` : product.name}</h3>
-              <p className={`status ${product.statusClass}`}>{product.status}</p>
+              <p className={`status ${product.statusclassName}`}>{product.status}</p>
               <p className="price">{product.price}</p>
               <p className="description">{product.description}</p>
             </div>

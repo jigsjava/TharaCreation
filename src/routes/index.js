@@ -14,6 +14,11 @@ import ProductHistory from "../pages/ProductHistory";
 import ForgotPassWord from "../pages/Auth/ForgotPassWord";
 import ProfilePage from "../pages/ProfilePage";
 import UpdatePassword from "../pages/Auth/UpdataPassword";
+import CategoryManager from "../pages/Admin/CategoryManager";
+import AdminHome from "../pages/Admin/AdminHome";
+import AdminDashoboard from "../pages/Admin/AdminDashoboard";
+import AdminSubCategory from "../pages/Admin/AdminSubCategory";
+import AdminAddProduct from "../pages/Admin/AdminAddProduct";
 
 const routes = () => {
   return (
@@ -32,6 +37,12 @@ const routes = () => {
       <Route path="/address" element={<Address/>} />
       <Route path="/history" element={<ProductHistory/>} />
       <Route path="/profile" element={<ProfilePage/>} />
+      {/* -------Admin Dashboard ------------ */}
+      <Route path="/adminhome" element={<AdminHome/>} />
+      <Route path="/admindashboard" element={<AdminDashoboard/>} />
+      <Route path="/categorymanager" element={<CategoryManager/>} />
+      <Route path="/adminsubcategory" element={<AdminSubCategory/>} />
+      <Route path="/adminaddproduct" element={<AdminAddProduct/>} />
     </Routes>
     </>
   );

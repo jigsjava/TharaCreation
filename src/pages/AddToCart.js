@@ -27,11 +27,11 @@ const AddToCart = () => {
   return (
     <>
     <div className="cart-page mt-5">
-      <div className="delivery-info">
+      {/* <div className="delivery-info">
         <p>Deliver to: <strong>Jignesh, 382350</strong></p>
         <p>D/96, sunrise park, Ahmedabad</p>
         <button className="btn btn-secondary">Change</button>
-      </div>
+      </div> */}
       <div className="cart-item">
         <img src={productImage} alt="Product" />
         <div className="item-info">

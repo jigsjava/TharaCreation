@@ -40,7 +40,7 @@ const ProductDetails = () => {
             />
           ))}
         </div>
-        <div className="product-info">
+        <div className="product-infomation">
           <h1>{sampleProduct.name}</h1>
           <p>{sampleProduct.description}</p>
           <div className="product-pricing">
