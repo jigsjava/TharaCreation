@@ -6,7 +6,7 @@ import { DeleteIcon, EditIcon, ViewIcon } from '../../assets/icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import SearchForm from '../../components/SearchForm';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Dropdown, DropdownButton, Table } from 'react-bootstrap';
 
 const AdminSubCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -43,118 +43,157 @@ const AdminSubCategory = () => {
 
   return (
     <div className="category-manager">
-      <h2>SubCategory</h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        {({ setFieldValue }) => (
-          <Form className="category-form">
-            <div className="form-group">
-              <label htmlFor="name">SubCategory Name</label>
-              <Field type="text" id="name" name="name" />
-              <ErrorMessage name="name" component="div" className="error-message" />
-            </div>
+      <div className="row d-flex justify-content-center" style={{background:'#D9FFDC',padding:'20px',borderRadius:'6px'}}>
+        <div className="col-lg-6 col-md-8 col-sm-12">
+          <h1 className='mb-4'>SubCategory</h1>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
+            {({ setFieldValue }) => (
+              <Form className="category-form">
+                <div className="form-group">
+                  <label htmlFor="name">SubCategory Name</label>
+                  <Field type="text" id="name" name="name" />
+                  <ErrorMessage
+                    name="name"
+                    component="div"
+                    className="error-message"
+                  />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="image">SubCategory Image</label>
-              <input
-                id="image"
-                name="image"
-                type="file"
-                onChange={(event) => {
-                  const file = event.currentTarget.files[0];
-                  setFieldValue("image", file);
+                <div className="form-group">
+                  <label htmlFor="image">SubCategory Image</label>
+                  <input
+                    id="image"
+                    name="image"
+                    type="file"
+                    onChange={(event) => {
+                      const file = event.currentTarget.files[0];
+                      setFieldValue("image", file);
 
-                  // Set preview image
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setPreviewImage(reader.result);
-                  };
-                  reader.readAsDataURL(file);
-                }}
-              />
-              <ErrorMessage name="image" component="div" className="error-message" />
-            </div>
+                      // Set preview image
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setPreviewImage(reader.result);
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                  <ErrorMessage
+                    name="image"
+                    component="div"
+                    className="error-message"
+                  />
+                </div>
 
-            {previewImage && (
-              <div className="image-preview">
-                <img src={previewImage} alt="Preview" height={100} width={100}/>
-              </div>
+                {previewImage && (
+                  <div className="image-preview">
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      height={100}
+                      width={100}
+                    />
+                  </div>
+                )}
+
+                <button type="submit" className="submit-button">
+                  Add SubCategory
+                </button>
+              </Form>
             )}
+          </Formik>
+        </div>
+      </div>
 
-            <button type="submit" className="submit-button">Add SubCategory</button>
-          </Form>
-        )}
-      </Formik>
-   
       <div className="category-list">
         <h3>SubCategory List</h3>
-        <div className='d-flex justify-content-between'>
-        <SearchForm />
-        <DropdownButton id="dropdown-item-button" title="Select Category">
-      <Dropdown.Item as="button">Category 1</Dropdown.Item>
-      <Dropdown.Item as="button">Category 2</Dropdown.Item>
-      <Dropdown.Item as="button">Category 3</Dropdown.Item>
-    </DropdownButton>
+        <div className="d-flex justify-content-between mb-3">
+          <SearchForm />
+          <DropdownButton id="dropdown-item-button" title="Select Category">
+            <Dropdown.Item as="button">Category 1</Dropdown.Item>
+            <Dropdown.Item as="button">Category 2</Dropdown.Item>
+            <Dropdown.Item as="button">Category 3</Dropdown.Item>
+          </DropdownButton>
         </div>
-     
-        <table className="table">
-     <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">SubCategory name</th>
-      <th scope="col">SubCategory Image</th>
-      <th scope="col">status</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Attaa</td>
-      <td>image</td>
-      <td><span className="badge bg-success">Approved</span></td>
-      <td>
-        <ViewIcon/>
-        
-        <span onClick={handleShow}>
-        <EditIcon /> 
-      </span>
-      <DeleteIcon />
-      </td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Attaa</td>
-      <td><img src={previewImage} alt={previewImage} className="category-image"height={50} width={50} /></td>
-      <td><span className="badge bg-danger">Rejected</span></td>
-      <td>
-        <ViewIcon />
-        <span onClick={handleShow}>
-        <EditIcon /> 
-      </span>
-      <DeleteIcon />
-      </td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>Attaa</td>
-      <td>image</td>
-      <td><span className="badge bg-secondary">Pending</span></td>
-      <td>
-        <ViewIcon />
-        <span onClick={handleShow}>
-        <EditIcon /> 
-      </span>
-      <DeleteIcon />
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">SubCategory name</th>
+              <th scope="col">SubCategory Image</th>
+              <th scope="col">status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Attaa</td>
+              <td>image</td>
+              <td>
+                <span className="badge bg-success">Approved</span>
+              </td>
+              <td>
+                <ViewIcon />
+
+                <span onClick={handleShow}>
+                  <EditIcon />
+                </span>
+                <DeleteIcon />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Attaa</td>
+              <td>
+                <img
+                  src={previewImage}
+                  alt={previewImage}
+                  className="category-image"
+                  height={50}
+                  width={50}
+                />
+              </td>
+              <td>
+                <span className="badge bg-danger">Rejected</span>
+              </td>
+              <td>
+                <ViewIcon />
+                <span onClick={handleShow}>
+                  <EditIcon />
+                </span>
+                <DeleteIcon />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">1</th>
+              <td>Attaa</td>
+              <td>image</td>
+              <td>
+                <span className="badge bg-secondary">Pending</span>
+              </td>
+              <td>
+                <ViewIcon />
+                <span onClick={handleShow}>
+                  <EditIcon />
+                </span>
+                <DeleteIcon />
+              </td>
+            </tr>
+          </tbody>
+        </Table>
       </div>
-      <Modal show={show} onHide={handleClose} animation={false} centered size="md">
+      <Modal
+        show={show}
+        onHide={handleClose}
+        animation={false}
+        centered
+        size="md"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Add New SubCategory</Modal.Title>
         </Modal.Header>
@@ -169,7 +208,11 @@ const AdminSubCategory = () => {
                 <div className="form-group mb-3">
                   <label htmlFor="name">SubCategory Name</label>
                   <Field type="text" id="name" name="name" />
-                  <ErrorMessage name="name" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="name"
+                    component="div"
+                    className="error-message"
+                  />
                 </div>
 
                 <div className="form-group mb-3">
@@ -190,16 +233,28 @@ const AdminSubCategory = () => {
                       reader.readAsDataURL(file);
                     }}
                   />
-                  <ErrorMessage name="image" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="image"
+                    component="div"
+                    className="error-message"
+                  />
                 </div>
 
                 {previewImage && (
                   <div className="image-preview">
-                    <img src={previewImage} alt="Preview" className="preview-image" height={100} width={100} />
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="preview-image"
+                      height={100}
+                      width={100}
+                    />
                   </div>
                 )}
 
-                <button type="submit" className="btn btn-primary">Add SubCategory</button>
+                <button type="submit" className="btn btn-primary">
+                  Add SubCategory
+                </button>
               </Form>
             )}
           </Formik>
