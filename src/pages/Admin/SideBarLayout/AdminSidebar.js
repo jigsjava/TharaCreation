@@ -21,6 +21,15 @@ const Sidebar = () => {
           <Link to="/adminaddproduct">Products</Link>
         </li>
         <li>
+          <Link to="/order">OrderList</Link>
+        </li>
+        <li>
+          <Link to="/adminslider">Dynemic Slider</Link>
+        </li>
+        <li>
+          <Link to="/setting">setting</Link>
+        </li>
+        <li>
           <Link to="#">Logout</Link>
         </li>
       </ul>

@@ -19,6 +19,9 @@
   import AdminSubCategory from "../pages/Admin/AdminSubCategory";
   import AdminAddProduct from "../pages/Admin/AdminAddProduct";
   import AdminLayout from "../pages/Admin/SideBarLayout/AdminLayout";
+import OrderList from "../pages/Admin/OrderList";
+import Setting from "../pages/Admin/Setting";
+import AdminSlider from "../pages/Admin/AdminSlider";
 
   const routes = () => {
     return (
@@ -43,6 +46,9 @@
       <Route path="/categorymanager" element={<AdminLayout><CategoryManager /></AdminLayout>} />
       <Route path="/adminsubcategory" element={<AdminLayout><AdminSubCategory /></AdminLayout>} />
       <Route path="/adminaddproduct" element={<AdminLayout><AdminAddProduct /></AdminLayout>} />
+      <Route path="/order" element={<AdminLayout><OrderList /></AdminLayout>} />
+      <Route path="/adminslider" element={<AdminLayout><AdminSlider /></AdminLayout>} />
+      <Route path="/setting" element={<AdminLayout><Setting /></AdminLayout>} />
       </Routes>
       </>
     );
