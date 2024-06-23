@@ -6,9 +6,8 @@ import {
   Button,
   Form,
   Spinner,
-  Modal,
 } from "react-bootstrap";
-import { Link, NavLink, Navigate, useNavigate } from "react-router-dom";
+import {NavLink,useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import AxiosInstance from "../../helpers/AxiosRequest";
@@ -20,12 +19,17 @@ const RegisterSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required").min(8).max(36),
+  password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters").max(36, "Password must be at most 36 characters"),
+  mobile: Yup.string()
+    .required("Mobile number is required")
+    .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
 });
 
 function Register() {
   const navigate = useNavigate();
   const [values, setValues] = useState({});
+  const [loading, setLoading] = useState(false);
+
   const form = useFormik({
     initialValues: {
       name: "",
@@ -35,26 +39,38 @@ function Register() {
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values, { resetForm, setErrors, setSubmitting }) => {
-      // console.log("values",values)
+      //  console.log("values",values)
+      setLoading(true); 
       try {
         setValues(values);
         const response = await AxiosInstance.post(`/auth/signup`,values);
-        console.log("response",response)
         if (response.status === 200) {
-          console.log("response")
-          navigate('/login')
-        } else {
-          toast.error(response.data.message, {
-            position: toast.POSITION.TOP_RIGHT,
+          toast.success("User registered successfully", {
+            position: toast.POSITION.TOP_CENTER,
           });
-         
-        }
+          resetForm(); 
+          navigate('/emailverify')
+        } 
+        // else {
+        //   toast.error(response.data.error, {
+        //     position: toast.POSITION.TOP_CENTER,
+        //   });
+        // }
       } catch (err) {
         console.error("Async error:", err);
+        if (err.response && err.response.data && err.response.data.error) {
+          toast.error(err.response.data.error, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        } else {
+          toast.error("An unexpected error occurred.", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
         setErrors(err.errors || {});
-       
       } finally {
         setSubmitting(false);
+        setLoading(false); 
       }
     },
   });
@@ -70,7 +86,7 @@ function Register() {
                 <h2 className="text-center header mb-3">Sign Up</h2>
               
                 <Form onSubmit={form.handleSubmit}>
-                  <Form.Group className="mb-3" controlId="">
+                  <Form.Group className="mb-3">
                     <label>Name</label>
                     <Form.Control
                       type="text"
@@ -88,7 +104,7 @@ function Register() {
                     )}
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="">
+                  <Form.Group className="mb-3">
                     <label>Email</label>
                     <Form.Control
                       type="email"
@@ -105,7 +121,7 @@ function Register() {
                       </Form.Text>
                     )}
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="">
+                  <Form.Group className="mb-3">
                     <label>Password</label>
                     <Form.Control
                       type="password"
@@ -123,7 +139,7 @@ function Register() {
                     )}
                   </Form.Group>
 
-                  <Form.Group className="mb-5" controlId="">
+                  <Form.Group className="mb-5">
                     <label>MobileNumber</label>
                     <Form.Control
                       type="number"
@@ -141,18 +157,18 @@ function Register() {
                     )}
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
-                    <Button
+                  <Button
                       variant=""
                       className="btn btn-secondary w-100"
-                      disabled={form.isSubmitting || !form.isValid}
+                      disabled={form.isSubmitting || !form.isValid || loading}
                       type="submit"
                     >
-                      {form.isSubmitting ? <Spinner /> : "Register"}
+                      {loading ? <Spinner animation="border" size="sm" /> : "Register"}
                     </Button>
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
                     <span className="font16Blk">Already have an Account? </span>
-                    <NavLink to={"/Login"} className="linkCommon">
+                    <NavLink to={"/login"} className="linkCommon">
                       Login
                     </NavLink>
                   </Form.Group>

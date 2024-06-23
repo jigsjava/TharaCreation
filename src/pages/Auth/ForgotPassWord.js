@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
-import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 
 
-const LoginSchema = Yup.object({
+const ForgotPasswordSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required").min(8).max(36),
 });
 
 const ForgotPassWord = () => {
@@ -21,35 +20,38 @@ const ForgotPassWord = () => {
   const form = useFormik({
     initialValues: {
       email: "",
-      password: "",
     },
-    validationSchema: LoginSchema,
+    validationSchema: ForgotPasswordSchema,
     onSubmit: async (values, { resetForm, setErrors, setSubmitting }) => {
-
+      setIsLoading(true);
       try {
-       
-        const response = await AxiosInstance.post("/auth/login", {
+        const response = await AxiosInstance.post("/auth/forgotpass", {
           email: values.email,
-          password: values.password,
         });
        
         if (response.status === 200) {
-          // console.log("responsetytty",response)
-          localStorage.setItem("accessToken", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data));
-          setIsLoading(false);
-         
-          navigate("/");
-      
+          toast.success("Password reset link sent successfully", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+          resetForm();
+          navigate("/login");
+        } 
+      } 
+      catch (err) {
+        console.log("errr",err)
+        if (err.response && err.response.data && err.response.data.error) {
+          toast.error(err.response.data.error, {
+            position: toast.POSITION.TOP_CENTER,
+          });
         } else {
-          setIsLoading(false);
-          toast.error(response.data.message);
+          toast.error("An unexpected error occurred.", {
+            position: toast.POSITION.TOP_CENTER,
+          });
         }
-      } catch (err) {
         setErrors(err.errors || {});
-        // notify(err.message, 'error');
       } finally {
         setSubmitting(false);
+        setIsLoading(false);
       }
     },
   });
@@ -87,9 +89,15 @@ const ForgotPassWord = () => {
                         {form.errors.email}
                       </Form.Text>
                     )}
-                     <Button className="btn btn-secondary w-100 mt-4" >continue</Button>
                   </Form.Group>
-                
+                  <Button
+                      variant=""
+                      className="btn btn-secondary w-100"
+                      disabled={form.isSubmitting || !form.isValid}
+                      type="submit"
+                    >
+                      {form.isSubmitting ? <Spinner animation="border" size="sm" />: "Continue"}
+                    </Button>
                   <Form.Group className="mb-3 text-center">
                     <span className="font16Blk">Don't have an account? </span>
                     <NavLink to={"/signup"} className="linkCommon">

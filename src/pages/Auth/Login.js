@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
-import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
@@ -11,7 +11,7 @@ const LoginSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required").min(8).max(36),
+  password: Yup.string().required("Password is required").min(6).max(36),
 });
 
 const Login = () => {
@@ -23,33 +23,40 @@ const Login = () => {
       email: "",
       password: "",
     },
+    
     validationSchema: LoginSchema,
     onSubmit: async (values, { resetForm, setErrors, setSubmitting }) => {
-
+      setIsLoading(true); 
       try {
-       
         const response = await AxiosInstance.post("/auth/login", {
           email: values.email,
           password: values.password,
         });
        
         if (response.status === 200) {
-          // console.log("responsetytty",response)
+          toast.success("Successful Login", {
+            position: toast.POSITION.TOP_CENTER,
+          });
           localStorage.setItem("accessToken", response.data.token);
           localStorage.setItem("user", JSON.stringify(response.data));
-          setIsLoading(false);
-         
+          resetForm(); 
           navigate("/");
-      
+        } 
+      }
+      catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          toast.error(err.response.data.error, {
+            position: toast.POSITION.TOP_CENTER,
+          });
         } else {
-          setIsLoading(false);
-          toast.error(response.data.message);
+          toast.error("An unexpected error occurred.", {
+            position: toast.POSITION.TOP_CENTER,
+          });
         }
-      } catch (err) {
         setErrors(err.errors || {});
-        // notify(err.message, 'error');
       } finally {
         setSubmitting(false);
+        setIsLoading(false); 
       }
     },
   });
@@ -110,15 +117,14 @@ const Login = () => {
                   </Form.Group>
                  
                   <Form.Group className="mb-3 text-center">
-                    {/* <Button
-                    className="btn btn-secondary w-100"
+                  <Button
+                      variant=""
+                      className="btn btn-secondary w-100"
                       disabled={form.isSubmitting || !form.isValid}
                       type="submit"
                     >
-                      {form.isSubmitting ? <Spinner /> : "Login"}
-                    </Button> */}
-
-                    <Button className="btn btn-secondary w-100" onClick={() => {navigate("/")}}>Login</Button>
+                      {isLoading ? <Spinner animation="border" size="sm" />: "Login"}
+                    </Button>
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
                     <span className="font16Blk">Don't have an account? </span>

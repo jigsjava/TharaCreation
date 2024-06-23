@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
-import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 
-
-const LoginSchema = Yup.object({
+const EmailVerifySchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required").min(8).max(36),
+  otp: Yup.string()
+    .required("OTP is required")
+    .min(6, "OTP must be at least 6 characters")
+    .max(36, "OTP must be at most 36 characters"),
 });
 
 const EmailVerify = () => {
@@ -21,35 +23,40 @@ const EmailVerify = () => {
   const form = useFormik({
     initialValues: {
       email: "",
-      password: "",
+      otp: "",
     },
-    validationSchema: LoginSchema,
+    validationSchema: EmailVerifySchema,
     onSubmit: async (values, { resetForm, setErrors, setSubmitting }) => {
-
+      setIsLoading(true); // Start loading
       try {
-       
-        const response = await AxiosInstance.post("/auth/login", {
+        const response = await AxiosInstance.post("/auth/emailverify", {
           email: values.email,
-          password: values.password,
+          otp: values.otp,
         });
-       
+
         if (response.status === 200) {
-          // console.log("responsetytty",response)
-          localStorage.setItem("accessToken", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data));
+          toast.success("Email verified successfully", {
+            position: toast.POSITION.TOP_CENTER,
+          });
           setIsLoading(false);
-         
-          navigate("/");
-      
-        } else {
-          setIsLoading(false);
-          toast.error(response.data.message);
+          resetForm();
+          navigate("/login");
         }
+         
       } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          toast.error(err.response.data.error, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        } else {
+          toast.error("An unexpected error occurred.", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
         setErrors(err.errors || {});
-        // notify(err.message, 'error');
       } finally {
         setSubmitting(false);
+        setIsLoading(false); 
       }
     },
   });
@@ -72,7 +79,7 @@ const EmailVerify = () => {
                 <h2 className="text-center header mb-3">Verify Email</h2>
                 <Form onSubmit={form.handleSubmit}>
                   <Form.Group className="mb-3" controlId="">
-                    <lable>Email</lable>
+                    <label>Email</label>
                     <Form.Control
                       type="email"
                       value={form.values.email}
@@ -89,25 +96,35 @@ const EmailVerify = () => {
                     )}
                   </Form.Group>
                   <Form.Group className="mb-4" controlId="">
-                    <lable>OTP</lable>
+                    <label>OTP</label>
                     <Form.Control
-                      type="password"
-                      name="password"
-                      value={form.values.password}
+                      type="text"
+                      name="otp"
+                      value={form.values.otp}
                       placeholder="Please enter OTP"
                       className="inputCustom"
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
                     />
-                    {form.touched.password && form.errors.password && (
+                    {form.touched.otp && form.errors.otp && (
                       <Form.Text className="font16Red">
-                        {form.errors.password}
+                        {form.errors.otp}
                       </Form.Text>
                     )}
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
-        
-                    <Button className="btn btn-secondary w-100">Verify Me</Button>
+                    <Button
+                      variant=""
+                      className="btn btn-secondary w-100"
+                      disabled={form.isSubmitting || !form.isValid || isLoading}
+                      type="submit"
+                    >
+                      {isLoading ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        "Verify Me"
+                      )}
+                    </Button>
                   </Form.Group>
                   <Form.Group className="mb-3 text-center">
                     <span className="font16Blk">Don't have an account? </span>
