@@ -13,7 +13,7 @@
   import ProductHistory from "../pages/ProductHistory";
   import ForgotPassWord from "../pages/Auth/ForgotPassWord";
   import ProfilePage from "../pages/ProfilePage";
-  import UpdatePassword from "../pages/Auth/UpdataPassword";
+  import UpdatePassword from "../pages/Auth/UpdatePassword";
   import CategoryManager from "../pages/Admin/CategoryManager";
   import AdminDashoboard from "../pages/Admin/AdminDashoboard";
   import AdminSubCategory from "../pages/Admin/AdminSubCategory";
@@ -30,7 +30,8 @@ import AdminSlider from "../pages/Admin/AdminSlider";
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/emailverify" element={<EmailVerify />} />
-        <Route path="/forgot" element={<ForgotPassWord />} />
+        <Route path="/updatepassword" element={<UpdatePassword />} />
+        <Route path="/forgotpassword" element={<ForgotPassWord />} />
         <Route path="/update" element={<UpdatePassword />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/subcategory" element={<SubCategory/>} />

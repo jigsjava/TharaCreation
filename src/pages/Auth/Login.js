@@ -106,7 +106,7 @@ const Login = () => {
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
                     />
-                     <NavLink to={"/forgot"} className="linkCommon">
+                     <NavLink to={"/forgotpassword"} className="linkCommon">
                       Forgot PassWord ?
                     </NavLink>
                     {form.touched.password && form.errors.password && (

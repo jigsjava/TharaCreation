@@ -34,7 +34,7 @@ const ForgotPassWord = () => {
             position: toast.POSITION.TOP_CENTER,
           });
           resetForm();
-          navigate("/login");
+          navigate("/updatepassword");
         } 
       } 
       catch (err) {
