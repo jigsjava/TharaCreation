@@ -11,7 +11,7 @@ const Dashboard = () => {
   return (
     <div className="container">
       <SwiperSlider />
-      <SearchForm />
+      {/* <SearchForm /> */}
       <Categories />
       <button className="btn btn-success m-5" onClick={() =>{navigate("/subcategory")}}>subcategory</button>
       <div><LogOut /></div>

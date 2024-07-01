@@ -9,7 +9,7 @@ import saree7 from "../assets/images/saree7.webp"
 import saree8 from "../assets/images/saree8.webp"
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import SearchForm from '../components/SearchForm';
+// import SearchForm from '../components/SearchForm';
 
 const categories = [
   { price:'900',name: 'Fashion', icon: Fashion },
@@ -27,7 +27,7 @@ const ProductListing = () => {
   return (
     <Container>
       <h2 className='mt-5'>Product Listing</h2>
-      <SearchForm />
+      {/* <SearchForm /> */}
         <div className="categories row mt-5 g-3">
       {categories.map((category, index) => (
         <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">

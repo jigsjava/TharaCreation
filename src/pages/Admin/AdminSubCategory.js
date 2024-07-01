@@ -5,7 +5,7 @@ import './CategoryManager.scss';
 import { DeleteIcon, EditIcon, ViewIcon } from '../../assets/icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import SearchForm from '../../components/SearchForm';
+// import SearchForm from '../../components/SearchForm';
 import { Dropdown, DropdownButton, Table } from 'react-bootstrap';
 
 const AdminSubCategory = () => {
@@ -111,7 +111,7 @@ const AdminSubCategory = () => {
       <div className="category-list">
         <h3>SubCategory List</h3>
         <div className="d-flex justify-content-between mb-3">
-          <SearchForm />
+          {/* <SearchForm /> */}
           <DropdownButton id="dropdown-item-button" title="Select Category">
             <Dropdown.Item as="button">Category 1</Dropdown.Item>
             <Dropdown.Item as="button">Category 2</Dropdown.Item>

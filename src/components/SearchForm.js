@@ -1,39 +1,34 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useState, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
+import debounce from 'lodash.debounce';
 import { SearchIcon } from '../assets/icons';
 
-const SearchForm = () => {
-  const initialValues = {
-    searchQuery: '',
-  };
+const SearchForm = ({ onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const validationSchema = Yup.object({
-    searchQuery: Yup.string().required('Required'),
-  });
+  const debouncedSearch = debounce((query) => {
+    onSearch(query);
+  }, 100); // Adjust the debounce delay as needed
 
-  const onSubmit = (values) => {
-    console.log('Search Query:', values.searchQuery);
-    // Handle search logic here
-  };
+  useEffect(() => {
+    debouncedSearch(searchQuery);
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [searchQuery]);
 
   return (
-    <div className="search-form col-6">
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-        <Form>
-          <div className="form-group position-relative">
-            <Field
-              type="text"
-              name="searchQuery"
-              placeholder="Search..."
-              className="form-control"
-            />
-            <SearchIcon />
-            <ErrorMessage name="searchQuery" component="div" className="error-message" />
-          </div>
-        </Form>
-      </Formik>
-    </div>
+    <Form className="d-flex align-items-center w-25 my-4" style={{borderRadius:'6px',border:'1px solid #c2c2c2'}}>
+      <span className='ms-2'><SearchIcon /></span>
+      <Form.Control
+      style={{border:0,fillOpacity:0}}
+        type="text"
+        placeholder="Search by category name"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="me-2"
+      />
+    </Form>
   );
 };
 

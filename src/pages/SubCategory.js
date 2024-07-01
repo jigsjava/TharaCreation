@@ -6,7 +6,7 @@ import Furniture from "../assets/images/Furniture.webp"
 import Travel from "../assets/images/Travel.webp"
 import Beauty from "../assets/images/Beauty.webp"
 import { Button, Container } from 'react-bootstrap';
-import SearchForm from '../components/SearchForm';
+// import SearchForm from '../components/SearchForm';
 import { useNavigate } from 'react-router-dom';
 
 const categories = [
@@ -23,7 +23,7 @@ const SubCategory = () => {
   return (
     <Container className='mt-5'>
       <h2 className='mt-5'>subcategory Name</h2>
-      <SearchForm />
+      {/* <SearchForm /> */}
       <div className="row mt-3 g-5">
         {categories.map((category, index) => (
           <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">

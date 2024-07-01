@@ -5,7 +5,7 @@ import './CategoryManager.scss';
 import { DeleteIcon, EditIcon, ViewIcon } from '../../assets/icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import SearchForm from '../../components/SearchForm';
+// import SearchForm from '../../components/SearchForm';
 import { Dropdown, DropdownButton, Table } from 'react-bootstrap';
 
 const AdminAddProduct = () => {
@@ -179,7 +179,7 @@ const AdminAddProduct = () => {
       <div className="category-list">
         <h3>Product List</h3>
         <div className="d-flex justify-content-end">
-          <SearchForm />
+          {/* <SearchForm /> */}
         </div>
         <div className="table-responsive">
           <Table striped bordered hover variant="dark">

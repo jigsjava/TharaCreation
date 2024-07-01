@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { DeleteIcon, EditIcon, ViewIcon } from '../../assets/icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import SearchForm from '../../components/SearchForm';
+// import SearchForm from '../../components/SearchForm';
 import { Dropdown, DropdownButton, Table } from 'react-bootstrap';
 
 
@@ -49,7 +49,7 @@ const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'ascendin
        <div className="category-list">
     <h3>Product List</h3>
     <div className="d-flex justify-content-between mb-3">
-      <SearchForm />
+      {/* <SearchForm /> */}
     </div>
 
     <Table striped bordered hover>
