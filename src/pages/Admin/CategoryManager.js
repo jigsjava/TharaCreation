@@ -54,7 +54,7 @@ const CategoryManager = () => {
         <table className="table table-striped">
           <thead className="thead-dark">
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">Index</th>
               <th scope="col">Category name</th>
               <th scope="col">Category Image</th>
               <th scope="col">status</th>
@@ -65,9 +65,10 @@ const CategoryManager = () => {
             {categories &&
               categories.map((category, index) => {
                 const { categoryName, images, _id } = category;
+                const overallIndex = (page - 1) * limit + index;
                 return (
                   <tr key={index}>
-                    <th scope="row">{index + 1}</th>
+                    <th scope="row">{overallIndex + 1}</th>
                     <td>{categoryName}</td>
                     <td>
                       {images &&
