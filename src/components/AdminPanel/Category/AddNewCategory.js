@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
-import { Form, Button, Spinner } from 'react-bootstrap';
+import { Form, Button, Spinner, Image } from 'react-bootstrap';
 import AxiosInstance from '../../../helpers/AxiosRequest';
 import { toast } from 'react-toastify';
 
 const AddNewCategory = ({ fetchData }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const initialValues = {
     categoryName: '',
@@ -14,8 +15,16 @@ const AddNewCategory = ({ fetchData }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    categoryName: Yup.string().required('Category name is required'),
-    image: Yup.mixed().required('Image is required'),
+    categoryName: Yup.string().required('Category name is required')
+    .min(5, 'Category name must be at least 5 characters')
+    .max(30, 'Category name must be at most 30 characters'),
+    image: Yup.mixed().required('Image is required').
+    test('fileSize', 'File size must be less than 3 MB', (value) => {
+      return value && value.size <= 3 * 1024 * 1024; // 3 MB in bytes
+    })
+    .test('fileFormat', 'only jpg,png,webp,jpeg upload', (value) => {
+      return value && ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(value.type);
+    }),
   });
 
   const handleSubmit = async(values, { resetForm, setErrors, setSubmitting }) => {
@@ -37,6 +46,7 @@ const AddNewCategory = ({ fetchData }) => {
         });
         fetchData();
         resetForm();
+        setPreviewImage(null);
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -98,6 +108,7 @@ const AddNewCategory = ({ fetchData }) => {
                     name="image"
                     onChange={(event) => {
                       setFieldValue("image", event.currentTarget.files[0]);
+                      setPreviewImage(URL.createObjectURL(event.currentTarget.files[0]));
                     }}
                     onBlur={handleBlur}
                   />
@@ -107,6 +118,12 @@ const AddNewCategory = ({ fetchData }) => {
                     </Form.Text>
                   )}
                 </Form.Group>
+
+                {previewImage && (
+                  <div className="mb-3">
+                    <Image src={previewImage} alt="Preview" thumbnail width={100}/>
+                  </div>
+                )}
 
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (

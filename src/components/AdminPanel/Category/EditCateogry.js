@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
-import { Form, Button, Modal, Spinner } from 'react-bootstrap';
+import { Form, Button, Modal, Spinner, Image } from 'react-bootstrap';
 import { EditIcon } from '../../../assets/icons';
 import { toast } from 'react-toastify';
 import AxiosInstance from '../../../helpers/AxiosRequest';
@@ -9,15 +9,28 @@ import AxiosInstance from '../../../helpers/AxiosRequest';
 const EditCateogry = ({id,fetchData}) => {
     const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentCategoryId, setCurrentCategoryId] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [currentCategory, setCurrentCategory] = useState({
+    categoryName: '',
+    images: [],
+  });
 
   const handleClose = () => {
     setShow(false);
-    setCurrentCategoryId(null);
+    setCurrentCategory({ categoryName: '',
+    images: []});
+    setPreviewImage(null);
   }
-  const handleShow = (id) => {
+  const handleShow = async(id) => {
     setShow(true);
-    setCurrentCategoryId(id)
+    try {
+      const response = await AxiosInstance.get(`/category/getcategorybyid?id=${id}`);
+      if (response.status === 200) {
+        setCurrentCategory(response.data.data);
+      }
+    } catch (error) {
+      toast.error('Error fetching category details');
+    }
   }
 
   const handleUpdateSubmit = async (values, { setErrors, setSubmitting,resetForm }) => {
@@ -30,7 +43,7 @@ const EditCateogry = ({id,fetchData}) => {
     }
 
     try {
-      const response = await AxiosInstance.post(`/category/updatecategory?id=${currentCategoryId}`, formData, {
+      const response = await AxiosInstance.post(`/category/updatecategory?id=${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -43,6 +56,7 @@ const EditCateogry = ({id,fetchData}) => {
         fetchData();
         resetForm();
         handleClose();
+        setPreviewImage(null);
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -60,6 +74,35 @@ const EditCateogry = ({id,fetchData}) => {
       setIsLoading(false);
     }
   };
+
+  const validationSchema = Yup.object().shape({
+    categoryName: Yup.string()
+      .required('Category name is required')
+      .min(5, 'Category name must be at least 5 characters')
+      .max(30, 'Category name must be at most 30 characters'),
+    image: Yup.mixed()
+      .test(
+        'fileSize',
+        'File size must be less than 3 MB',
+        (value) => {
+          // Only validate if a file is selected
+          return !value || (value && value.size <= 3 * 1024 * 1024);
+        }
+      )
+      .test(
+        'fileFormat',
+        'Only jpg, png, webp, jpeg formats are allowed',
+        (value) => {
+          // Only validate if a file is selected
+          return (
+            !value ||
+            (value &&
+              ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(value.type))
+          );
+        }
+      ),
+  })
+
   return (
     <>
       <span onClick={() => handleShow(id)} style={{ cursor: "pointer" }}>
@@ -78,13 +121,10 @@ const EditCateogry = ({id,fetchData}) => {
         <Modal.Body>
           <Formik
             initialValues={{
-              categoryName: "",
+              categoryName: currentCategory.categoryName || "",
               image: null,
             }}
-            validationSchema={Yup.object().shape({
-              categoryName: Yup.string().required("Category name is required"),
-              image: Yup.mixed(),
-            })}
+            validationSchema={validationSchema}
             onSubmit={handleUpdateSubmit}
             enableReinitialize
           >
@@ -120,6 +160,7 @@ const EditCateogry = ({id,fetchData}) => {
                     name="image"
                     onChange={(event) => {
                       setFieldValue("image", event.currentTarget.files[0]);
+                      setPreviewImage(URL.createObjectURL(event.currentTarget.files[0]))
                     }}
                     onBlur={handleBlur}
                   />
@@ -127,6 +168,31 @@ const EditCateogry = ({id,fetchData}) => {
                     <Form.Text className="font16Red">{errors.image}</Form.Text>
                   )}
                 </Form.Group>
+                {previewImage && (
+                  <div className="mb-3">
+                     <Form.Label>Preview Image</Form.Label>
+                     <div>
+                    <Image src={previewImage} alt="Preview" thumbnail width={100}/>
+                     </div>
+                  </div>
+                )}
+                {currentCategory.images &&
+                  currentCategory.images.length > 0 && (
+                    <div className="mb-3">
+                      <Form.Label>Current Image</Form.Label>
+                      <div>
+                        {currentCategory.images.map((image, index) => (
+                          <Image
+                            key={index}
+                            src={image}
+                            alt="Current category"
+                            thumbnail
+                            width={100}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (

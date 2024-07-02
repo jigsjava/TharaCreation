@@ -8,6 +8,7 @@ import DeleteCategory from "../../components/AdminPanel/Category/DeleteCategory"
 import ViewCategory from "../../components/AdminPanel/Category/ViewCategory";
 import EditCateogry from "../../components/AdminPanel/Category/EditCateogry";
 import AddNewCategory from "../../components/AdminPanel/Category/AddNewCategory";
+import { Image } from "react-bootstrap";
 
 const CategoryManager = () => {
   const limit = 2;
@@ -71,7 +72,7 @@ const CategoryManager = () => {
                     <td>
                       {images &&
                         images?.map((image, index) => (
-                          <img
+                          <Image
                             key={index}
                             src={image}
                             alt={category?.categoryName}
@@ -80,6 +81,7 @@ const CategoryManager = () => {
                               height: "auto",
                               padding: "5px",
                             }}
+                            thumbnail
                           />
                         ))}
                     </td>
