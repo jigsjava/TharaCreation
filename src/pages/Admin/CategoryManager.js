@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./CategoryManager.scss";
+import "./scss/CategoryManager.scss";
 import SearchForm from "../../components/SearchForm";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
@@ -91,7 +91,7 @@ const CategoryManager = () => {
                     </td>
                     <td>
                       <EditCateogry id={_id} fetchData={() => fetchData(page)} category={category}/>
-                      <ViewCategory id={_id} />
+                      <ViewCategory category={category}/>
                       <DeleteCategory id={_id} fetchData={() => fetchData(page)} />
                     </td>
                   </tr>

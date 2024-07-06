@@ -1,7 +1,7 @@
 // src/components/Sidebar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './AdminSidebar.scss'; // You will create this CSS file next
+import '../scss/AdminSidebar.scss'; // You will create this CSS file next
 
 const Sidebar = () => {
   return (

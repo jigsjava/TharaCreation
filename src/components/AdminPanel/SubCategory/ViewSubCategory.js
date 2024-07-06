@@ -1,27 +1,12 @@
 import React, { useState } from 'react';
-import AxiosInstance from '../../../helpers/AxiosRequest';
-import { toast } from 'react-toastify';
 import { ViewIcon } from '../../../assets/icons';
 import { Button, Modal } from 'react-bootstrap';
 
-const ViewSubCategory = ({ id }) => {
+const ViewSubCategory = ({subCategory}) => {
   const [showSubCategory, setshowSubCategory] = useState(false);
-  const [getSubCategory, setSubGetCategory] = useState(null);
 
-  const getSubCategoryDetails = async (id) => {
-    try {
-      const response = await AxiosInstance.get(`subcategory/getsubcategorybyid?id=${id}`);
-      if (response.status === 200) {
-        setSubGetCategory(response?.data?.data);
-      }
-    } catch (error) {
-      toast.error('An error occurred while fetching subcategory details');
-    }
-  };
-
-  const handleShowSubCategory = (id) => {
+  const handleShowSubCategory = () => {
     setshowSubCategory(true);
-    getSubCategoryDetails(id);
   };
 
   const handleCloseSubCategory = () => {
@@ -30,7 +15,7 @@ const ViewSubCategory = ({ id }) => {
 
   return (
     <>
-    <span onClick={() => handleShowSubCategory(id)} style={{ cursor: 'pointer' }}>
+    <span onClick={() => handleShowSubCategory()} style={{ cursor: 'pointer' }}>
       <ViewIcon />
     </span>
     <Modal
@@ -45,14 +30,14 @@ const ViewSubCategory = ({ id }) => {
         </Modal.Header>
         <Modal.Body>
           <div className="d-flex justify-content-center align-items-center flex-column">
-            <h3>{getSubCategory?.subCategoryName}</h3>
+            <h3>{subCategory?.subCategoryName}</h3>
             <div>
-              {getSubCategory?.images &&
-                getSubCategory?.images.map((image, index) => (
+              {subCategory?.images &&
+                subCategory?.images.map((image, index) => (
                   <img
                     key={index}
                     src={image}
-                    alt={getSubCategory?.subCategoryName}
+                    alt={subCategory?.subCategoryName}
                     style={{ width: '200px', height: 'auto', margin: '10px 0' }}
                   />
                 ))}
@@ -66,7 +51,6 @@ const ViewSubCategory = ({ id }) => {
         </Modal.Footer>
       </Modal>
     </>
-    
   );
 };
 

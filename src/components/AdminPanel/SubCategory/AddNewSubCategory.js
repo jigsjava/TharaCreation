@@ -1,45 +1,76 @@
-import React, { useState } from 'react';
-import { Formik, Form as FormikForm } from 'formik';
-import * as Yup from 'yup';
-import { Form, Button, Spinner, Image } from 'react-bootstrap';
-import AxiosInstance from '../../../helpers/AxiosRequest';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { Formik, Form as FormikForm } from "formik";
+import * as Yup from "yup";
+import { Form, Button, Spinner, Image } from "react-bootstrap";
+import AxiosInstance from "../../../helpers/AxiosRequest";
+import { toast } from "react-toastify";
 
 const AddNewSubCategory = ({ fetchData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await AxiosInstance.get("/category/getcategory");
+        setCategories(response?.data?.data);
+      } catch (error) {
+        toast.error("Failed to load categories", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const initialValues = {
-    subCategoryName: '',
+    subCategoryName: "",
+    category: "",
     image: null,
   };
 
   const validationSchema = Yup.object().shape({
-    subCategoryName: Yup.string().required('SubCategory name is required')
-    .min(5, 'SubCategory name must be at least 5 characters')
-    .max(30, 'SubCategory name must be at most 30 characters'),
-    image: Yup.mixed().required('Image is required').
-    test('fileSize', 'File size must be less than 3 MB', (value) => {
-      return value && value.size <= 3 * 1024 * 1024; // 3 MB in bytes
-    })
-    .test('fileFormat', 'only jpg,png,webp,jpeg upload', (value) => {
-      return value && ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(value.type);
-    }),
+    subCategoryName: Yup.string()
+      .required("SubCategory name is required")
+      .min(5, "SubCategory name must be at least 5 characters")
+      .max(30, "SubCategory name must be at most 30 characters"),
+    category: Yup.string().required("Category is required"),
+    image: Yup.mixed()
+      .required("Image is required")
+      .test("fileSize", "File size must be less than 3 MB", (value) => {
+        return value && value.size <= 3 * 1024 * 1024; // 3 MB in bytes
+      })
+      .test("fileFormat", "only jpg,png,webp,jpeg upload", (value) => {
+        return (
+          value &&
+          ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+            value.type
+          )
+        );
+      }),
   });
 
-  const handleSubmit = async(values, { resetForm, setErrors, setSubmitting }) => {
+  const handleSubmit = async (
+    values,
+    { resetForm, setErrors, setSubmitting }
+  ) => {
     setIsLoading(true);
     const formData = new FormData();
-    formData.append('subCategoryName', values.subCategoryName);
-    formData.append('subCategoryImages', values.image);
+    formData.append("subCategoryName", values.subCategoryName);
+    formData.append("categoryId", values.category);
+    formData.append("subCategoryImages", values.image);
 
     try {
-      const response = await AxiosInstance.post("/subcategory/addsubcategory", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
+      const response = await AxiosInstance.post(
+        "/subcategory/addsubcategory",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (response.status === 200) {
         toast.success("SubCategory added successfully", {
           position: toast.POSITION.TOP_CENTER,
@@ -66,7 +97,9 @@ const AddNewSubCategory = ({ fetchData }) => {
   };
 
   return (
-    <div style={{ background: "#FFF5DC", padding: "20px", borderRadius: "6px" }}>
+    <div
+      style={{ background: "#FFF5DC", padding: "20px", borderRadius: "6px" }}
+    >
       <h1 className="text-start mb-4">Add New subCategory</h1>
       <div className="row d-flex justify-content-center">
         <div className="col-lg-6 col-md-8 col-sm-12">
@@ -75,68 +108,102 @@ const AddNewSubCategory = ({ fetchData }) => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({
-              setFieldValue,
-              handleChange,
-              handleBlur,
-              values,
-              errors,
-              touched,
-            }) => (
-              <FormikForm>
-                <Form.Group className="mb-3" controlId="subCategoryName">
-                  <Form.Label>SubCategory Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="subCategoryName"
-                    value={values.subCategoryName}
-                    placeholder="Enter subCategory name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  {touched.subCategoryName && errors.subCategoryName && (
-                    <Form.Text className="font16Red">
-                      {errors.subCategoryName}
-                    </Form.Text>
-                  )}
-                </Form.Group>
+            {
+              ({
+                setFieldValue,
+                handleChange,
+                handleBlur,
+                values,
+                errors,
+                touched,
+              }) => {
+                return (
+                  <FormikForm>
+                    <Form.Group className="mb-3" controlId="category">
+                      <Form.Label>Category</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="category"
+                        value={values.category}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      >
+                        <option value="">Select a category</option>
+                        {categories?.map((category) => (
+                          <option key={category._id} value={category._id}>
+                            {category?.categoryName}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {touched.category && errors.category && (
+                        <Form.Text className="font16Red">
+                          {errors.category}
+                        </Form.Text>
+                      )}
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="image">
-                  <Form.Label>Image Upload</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="image"
-                    onChange={(event) => {
-                      setFieldValue("image", event.currentTarget.files[0]);
-                      setPreviewImage(URL.createObjectURL(event.currentTarget.files[0]));
-                    }}
-                    onBlur={handleBlur}
-                  />
-                  {touched.image && errors.image && (
-                    <Form.Text className="font16Red">
-                      {errors.image}
-                    </Form.Text>
-                  )}
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="subCategoryName">
+                      <Form.Label>SubCategory Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="subCategoryName"
+                        value={values.subCategoryName}
+                        placeholder="Enter subCategory name"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.subCategoryName && errors.subCategoryName && (
+                        <Form.Text className="font16Red">
+                          {errors.subCategoryName}
+                        </Form.Text>
+                      )}
+                    </Form.Group>
 
-                {previewImage && (
-                  <div className="mb-3">
-                    <Image src={previewImage} alt="Preview" thumbnail width={100}/>
-                  </div>
-                )}
+                    <Form.Group className="mb-3" controlId="image">
+                      <Form.Label>Image Upload</Form.Label>
+                      <Form.Control
+                        type="file"
+                        name="image"
+                        onChange={(event) => {
+                          setFieldValue("image", event.currentTarget.files[0]);
+                          setPreviewImage(
+                            URL.createObjectURL(event.currentTarget.files[0])
+                          );
+                        }}
+                        onBlur={handleBlur}
+                      />
+                      {touched.image && errors.image && (
+                        <Form.Text className="font16Red">
+                          {errors.image}
+                        </Form.Text>
+                      )}
+                    </Form.Group>
 
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Spinner animation="border" size="sm me-2" />
-                      Adding ...
-                    </>
-                  ) : (
-                    "Add New SubCategory"
-                  )}
-                </Button>
-              </FormikForm>
-            )}
+                    {previewImage && (
+                      <div className="mb-3">
+                        <Image
+                          src={previewImage}
+                          alt="Preview"
+                          thumbnail
+                          width={100}
+                        />
+                      </div>
+                    )}
+
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Spinner animation="border" size="sm me-2" />
+                          Adding ...
+                        </>
+                      ) : (
+                        "Add New SubCategory"
+                      )}
+                    </Button>
+                  </FormikForm>
+                );
+              }
+            }
           </Formik>
         </div>
       </div>

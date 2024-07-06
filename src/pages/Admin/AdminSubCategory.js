@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./CategoryManager.scss";
+import "./scss/CategoryManager.scss";
 import SearchForm from "../../components/SearchForm";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ const AdminSubCategory = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  
 
   useEffect(() => {
     fetchData(page);
@@ -48,13 +49,14 @@ const AdminSubCategory = () => {
       <AddNewSubCategory fetchData={() => fetchData(page)} />
       <div className="category-list">
         <h3>SubCategory List</h3>
-        <div className="w-100 d-flex justify-content-end">
+        <div className="w-100 d-flex justify-content-end">  
         <SearchForm onSearch={handleSearch} />
         </div>
         <table className="table table-striped">
           <thead className="thead-dark">
             <tr>
               <th scope="col">Index</th>
+              <th scope="col">CategoryName</th>
               <th scope="col">SubCategory name</th>
               <th scope="col">SubCategory Image</th>
               <th scope="col">status</th>
@@ -64,11 +66,12 @@ const AdminSubCategory = () => {
           <tbody>
             {subCategories &&
               subCategories.map((subCategory, index) => {
-                const { subCategoryName, images, _id } = subCategory;
+                const { subCategoryName, images, _id,category} = subCategory;
                 const overallIndex = (page - 1) * limit + index;
                 return (
                   <tr key={index}>
                     <th scope="row">{overallIndex + 1}</th>
+                    <td>{category.categoryName}</td>
                     <td>{subCategoryName}</td>
                     <td>
                       {images &&
@@ -91,7 +94,7 @@ const AdminSubCategory = () => {
                     </td>
                     <td>
                       <EditSubCateogry id={_id} subCategory={subCategory} fetchData={() => fetchData(page)}/>
-                      <ViewSubCategory id={_id} />
+                      <ViewSubCategory subCategory={subCategory}/>
                       <DeleteSubCategory id={_id} fetchData={() => fetchData(page)} />
                     </td>
                   </tr>

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import AxiosInstance from '../../../helpers/AxiosRequest';
 
 const EditSubCateogry = ({id,fetchData,subCategory}) => {
-    const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
  
@@ -15,7 +15,7 @@ const EditSubCateogry = ({id,fetchData,subCategory}) => {
     setShow(false);
     setPreviewImage(null);
   }
-  const handleShow = async(id) => {
+  const handleShow = async() => {
     setShow(true);
   }
 
@@ -70,7 +70,6 @@ const EditSubCateogry = ({id,fetchData,subCategory}) => {
         'fileSize',
         'File size must be less than 3 MB',
         (value) => {
-          // Only validate if a file is selected
           return !value || (value && value.size <= 3 * 1024 * 1024);
         }
       )
@@ -78,7 +77,6 @@ const EditSubCateogry = ({id,fetchData,subCategory}) => {
         'fileFormat',
         'Only jpg, png, webp, jpeg formats are allowed',
         (value) => {
-          // Only validate if a file is selected
           return (
             !value ||
             (value &&
@@ -90,7 +88,7 @@ const EditSubCateogry = ({id,fetchData,subCategory}) => {
 
   return (
     <>
-      <span onClick={() => handleShow(id)} style={{ cursor: "pointer" }}>
+      <span onClick={() => handleShow()} style={{ cursor: "pointer" }}>
         <EditIcon />
       </span>
       <Modal

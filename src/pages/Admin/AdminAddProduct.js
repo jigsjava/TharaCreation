@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import './CategoryManager.scss';
+import './scss/CategoryManager.scss';
 import { DeleteIcon, EditIcon, ViewIcon } from '../../assets/icons';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
