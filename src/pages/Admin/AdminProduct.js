@@ -5,14 +5,14 @@ import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/Pagination";
 import { Image } from "react-bootstrap";
-import DeleteSubCategory from "../../components/AdminPanel/SubCategory/DeleteSubCategory"
-import ViewSubCategory from  '../../components/AdminPanel/SubCategory/ViewSubCategory'
-import EditSubCateogry from "../../components/AdminPanel/SubCategory/EditSubCategory"
-import AddNewSubCategory from '../../components/AdminPanel/SubCategory/AddNewSubCategory'
+import DeleteProducts from "../../components/AdminPanel/Products/DeleteProducts"
+import ViewProducts from  '../../components/AdminPanel/Products/ViewProducts'
+import EditProducts from "../../components/AdminPanel/Products/EditPoducts"
+import AddNewProducts from '../../components/AdminPanel/Products/AddProducts'
 
-const AdminSubCategory = () => {
+const AdminProduct = () => {
   const limit = 2;
-  const [subCategories, setSubCategories] = useState([]);
+  const [product, setProduct] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,15 +25,14 @@ const AdminSubCategory = () => {
   const fetchData = async (pageNumber) => {
     try {
       const response = await AxiosInstance.get(
-        `/subcategory/getsubcategory?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}`
+        `/product/getproduct?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}`
       );
-      setSubCategories(response?.data?.data);
+      setProduct(response?.data?.data);
       setTotalPages(response?.data?.pagination?.totalPages);
     } catch (error) {
       toast.error("Error fetching data");
     }
   };
-
   const handlePageClick = (pages) => {
     fetchData(pages);
     setPage(pages);
@@ -46,9 +45,9 @@ const AdminSubCategory = () => {
   
   return (
     <div className="category-manager">
-      <AddNewSubCategory fetchData={() => fetchData(page)} />
+      <AddNewProducts fetchData={() => fetchData(page)} />
       <div className="category-list">
-        <h3>SubCategory List</h3>
+        <h3>Products List</h3>
         <div className="w-100 d-flex justify-content-end">  
         <SearchForm onSearch={handleSearch} />
         </div>
@@ -64,22 +63,23 @@ const AdminSubCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {subCategories &&
-              subCategories.map((subCategory, index) => {
-                const { subCategoryName, images, _id,categoryData} = subCategory;
+            {product &&
+              product?.map((products, index) => {
+                const { productName, images, _id,categoryData} = products;
+                console.log("products",products)
                 const overallIndex = (page - 1) * limit + index;
                 return (
                   <tr key={index}>
                     <th scope="row">{overallIndex + 1}</th>
                     <td>{categoryData?.categoryName}</td>
-                    <td>{subCategoryName}</td>
+                    <td>{productName}</td>
                     <td>
                       {images &&
                         images?.map((image, index) => (
                           <Image
                             key={index}
                             src={image}
-                            alt={subCategory?.subCategoryName}
+                            alt={products?.productName}
                             style={{
                               width: "50px",
                               height: "auto",
@@ -93,9 +93,9 @@ const AdminSubCategory = () => {
                       <span className="badge bg-success">Approved</span>
                     </td>
                     <td>
-                      <EditSubCateogry id={_id} subCategory={subCategory} fetchData={() => fetchData(page)}/>
-                      <ViewSubCategory subCategory={subCategory}/>
-                      <DeleteSubCategory id={_id} fetchData={() => fetchData(page)} />
+                      <EditProducts id={_id} products={products} fetchData={() => fetchData(page)}/>
+                      <ViewProducts products={products}/>
+                      <DeleteProducts id={_id} fetchData={() => fetchData(page)} />
                     </td>
                   </tr>
                 );
@@ -116,4 +116,4 @@ const AdminSubCategory = () => {
   );
 };
 
-export default AdminSubCategory;
+export default AdminProduct;
