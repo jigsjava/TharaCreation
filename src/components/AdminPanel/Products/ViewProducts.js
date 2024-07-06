@@ -42,6 +42,11 @@ const ViewProducts = ({products}) => {
                   />
                 ))}
             </div>
+            <div className='d-flex justify-content-between w-100 px-4'>
+              <div><strong>Price : </strong>{products?.price}</div>
+              <div><strong>Discount Price : </strong>{products?.discountPrice}</div>
+              <div><strong>Quantity : </strong>{products?.quantity}</div>
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

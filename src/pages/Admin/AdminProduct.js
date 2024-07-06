@@ -42,7 +42,7 @@ const AdminProduct = () => {
     setSearchQuery(query);
     setPage(1); // Reset page to 1 on search
   };
-  
+
   return (
     <div className="category-manager">
       <AddNewProducts fetchData={() => fetchData(page)} />
@@ -57,7 +57,11 @@ const AdminProduct = () => {
               <th scope="col">Index</th>
               <th scope="col">CategoryName</th>
               <th scope="col">SubCategory name</th>
+              <th scope="col">Product name</th>
               <th scope="col">SubCategory Image</th>
+              <th scope="col">Price</th>
+              <th scope="col">Discount Price</th>
+              <th scope="col">Quantity</th>
               <th scope="col">status</th>
               <th scope="col">Action</th>
             </tr>
@@ -65,13 +69,13 @@ const AdminProduct = () => {
           <tbody>
             {product &&
               product?.map((products, index) => {
-                const { productName, images, _id,categoryData} = products;
-                console.log("products",products)
+                const { productName, images, _id,subCategoryData,categoryData,price,discountPrice,quantity} = products;
                 const overallIndex = (page - 1) * limit + index;
                 return (
                   <tr key={index}>
                     <th scope="row">{overallIndex + 1}</th>
                     <td>{categoryData?.categoryName}</td>
+                    <td>{subCategoryData?.subCategoryName}</td>
                     <td>{productName}</td>
                     <td>
                       {images &&
@@ -89,6 +93,9 @@ const AdminProduct = () => {
                           />
                         ))}
                     </td>
+                    <td>{price}</td>
+                    <td>{discountPrice}</td>
+                    <td>{quantity}</td>
                     <td>
                       <span className="badge bg-success">Approved</span>
                     </td>
@@ -97,6 +104,7 @@ const AdminProduct = () => {
                       <ViewProducts products={products}/>
                       <DeleteProducts id={_id} fetchData={() => fetchData(page)} />
                     </td>
+                   
                   </tr>
                 );
               })}

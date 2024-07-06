@@ -23,6 +23,9 @@ const EditProducts = ({id,fetchData,products}) => {
     setIsLoading(true);
     const formData = new FormData();
     formData.append('productName', values.productName);
+    formData.append('price', values.price);
+    formData.append('discountPrice', values.discountprice);
+    formData.append('quantity', values.quantity);
     if (values.image) {
       formData.append('productImages', values.image);
     }
@@ -133,6 +136,54 @@ const EditProducts = ({id,fetchData,products}) => {
                   {touched.productName && errors.productName && (
                     <Form.Text className="font16Red">
                       {errors.productName}
+                    </Form.Text>
+                  )}
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="price">
+                  <Form.Label>Price</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="price"
+                    value={values.price}
+                    placeholder="Enter Price"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  {touched.price && errors.price && (
+                    <Form.Text className="font16Red">
+                      {errors.price}
+                    </Form.Text>
+                  )}
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="discountprice">
+                  <Form.Label>Discount Price</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="discountprice"
+                    value={values.discountprice}
+                    placeholder="Enter Discount Price"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  {touched.discountprice && errors.discountprice && (
+                    <Form.Text className="font16Red">
+                      {errors.discountprice}
+                    </Form.Text>
+                  )}
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="quantity">
+                  <Form.Label>Quantity</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="quantity"
+                    value={values.quantity}
+                    placeholder="Enter Quantity"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  {touched.quantity && errors.quantity && (
+                    <Form.Text className="font16Red">
+                      {errors.quantity}
                     </Form.Text>
                   )}
                 </Form.Group>

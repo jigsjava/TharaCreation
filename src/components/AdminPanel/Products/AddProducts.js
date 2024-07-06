@@ -39,11 +39,16 @@ const AddProducts = ({ fetchData }) => {
     fetchSubCategories();
   }, []);
 
+  // console.log("categories",categories)
+  // console.log("subCategories",subCategories)
   const initialValues = {
     productName: "",
     category: "",
     subcategory:'',
     image: null,
+    price:'',
+    discountprice:'',
+    quantity:'',
   };
 
   const validationSchema = Yup.object().shape({
@@ -78,6 +83,10 @@ const AddProducts = ({ fetchData }) => {
     formData.append("categoryId", values.category);
     formData.append("subCategoryId", values.subcategory);
     formData.append("productImages", values.image);
+    formData.append("price", values.price);
+    formData.append("discountPrice", values.discountprice);
+    formData.append("quantity", values.quantity);
+
     
     try {
       const response = await AxiosInstance.post(
@@ -183,7 +192,7 @@ const AddProducts = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="subCategoryName">
+                    <Form.Group className="mb-3" controlId="productName">
                       <Form.Label>Product Name</Form.Label>
                       <Form.Control
                         type="text"
@@ -231,6 +240,56 @@ const AddProducts = ({ fetchData }) => {
                       </div>
                     )}
 
+                    <Form.Group className="mb-3" controlId="price">
+                      <Form.Label>Price</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="price"
+                        value={values.price}
+                        placeholder="Enter Price"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.price && errors.price && (
+                        <Form.Text className="font16Red">
+                          {errors.price}
+                        </Form.Text>
+                      )}
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="discountprice">
+                      <Form.Label>Discount Price</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="discountprice"
+                        value={values.discountprice}
+                        placeholder="Enter Discount Price"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.discountprice && errors.discountprice && (
+                        <Form.Text className="font16Red">
+                          {errors.discountprice}
+                        </Form.Text>
+                      )}
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="quantity">
+                      <Form.Label>Quanttity</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="quantity"
+                        value={values.quantity}
+                        placeholder="Enter Quantity"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {touched.quanttity && errors.quanttity && (
+                        <Form.Text className="font16Red">
+                          {errors.quanttity}
+                        </Form.Text>
+                      )}
+                    </Form.Group>
                     <Button type="submit" disabled={isLoading}>
                       {isLoading ? (
                         <>
