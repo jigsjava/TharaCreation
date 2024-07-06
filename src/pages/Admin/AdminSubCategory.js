@@ -1,128 +1,60 @@
-import React, { useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import './CategoryManager.scss';
-import { DeleteIcon, EditIcon, ViewIcon } from '../../assets/icons';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-// import SearchForm from '../../components/SearchForm';
-import { Dropdown, DropdownButton, Table } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import "./CategoryManager.scss";
+import SearchForm from "../../components/SearchForm";
+import AxiosInstance from "../../helpers/AxiosRequest";
+import { toast } from "react-toastify";
+import PaginationComponent from "../../components/Pagination";
+import { Image } from "react-bootstrap";
+import DeleteSubCategory from "../../components/AdminPanel/SubCategory/DeleteSubCategory"
+import ViewSubCategory from  '../../components/AdminPanel/SubCategory/ViewSubCategory'
+import EditSubCateogry from "../../components/AdminPanel/SubCategory/EditSubCategory"
+import AddNewSubCategory from '../../components/AdminPanel/SubCategory/AddNewSubCategory'
 
 const AdminSubCategory = () => {
-  const [categories, setCategories] = useState([]);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [show, setShow] = useState(false);
+  const limit = 2;
+  const [subCategories, setSubCategories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  useEffect(() => {
+    fetchData(page);
+  }, [page, searchQuery]); 
 
-  const initialValues = {
-    name: '',
-    image: null,
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await AxiosInstance.get(
+        `/subcategory/getsubcategory?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}`
+      );
+      setSubCategories(response?.data?.data);
+      setTotalPages(response?.data?.pagination?.totalPages);
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
   };
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required('Category name is required'),
-    image: Yup.mixed().required('Category image is required')
-      .test('fileType', 'Unsupported File Format', value => value && ['image/jpeg', 'image/png', 'image/gif'].includes(value.type)),
-  });
-
-  const onSubmit = (values, { resetForm }) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const newCategory = {
-        name: values.name,
-        imageUrl: reader.result,
-        active: values.active,
-      };
-      setCategories([...categories, newCategory]);
-      resetForm();
-    };
-    reader.readAsDataURL(values.image);
+  const handlePageClick = (pages) => {
+    fetchData(pages);
+    setPage(pages);
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setPage(1); // Reset page to 1 on search
+  };
+  
   return (
     <div className="category-manager">
-      <div className="row d-flex justify-content-center" style={{background:'#D9FFDC',padding:'20px',borderRadius:'6px'}}>
-        <div className="col-lg-6 col-md-8 col-sm-12">
-          <h1 className='mb-4'>SubCategory</h1>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            {({ setFieldValue }) => (
-              <Form className="category-form">
-                <div className="form-group">
-                  <label htmlFor="name">SubCategory Name</label>
-                  <Field type="text" id="name" name="name" />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="error-message"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="image">SubCategory Image</label>
-                  <input
-                    id="image"
-                    name="image"
-                    type="file"
-                    onChange={(event) => {
-                      const file = event.currentTarget.files[0];
-                      setFieldValue("image", file);
-
-                      // Set preview image
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setPreviewImage(reader.result);
-                      };
-                      reader.readAsDataURL(file);
-                    }}
-                  />
-                  <ErrorMessage
-                    name="image"
-                    component="div"
-                    className="error-message"
-                  />
-                </div>
-
-                {previewImage && (
-                  <div className="image-preview">
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      height={100}
-                      width={100}
-                    />
-                  </div>
-                )}
-
-                <button type="submit" className="submit-button">
-                  Add SubCategory
-                </button>
-              </Form>
-            )}
-          </Formik>
-        </div>
-      </div>
-
+      <AddNewSubCategory fetchData={() => fetchData(page)} />
       <div className="category-list">
         <h3>SubCategory List</h3>
-        <div className="d-flex justify-content-between mb-3">
-          {/* <SearchForm /> */}
-          <DropdownButton id="dropdown-item-button" title="Select Category">
-            <Dropdown.Item as="button">Category 1</Dropdown.Item>
-            <Dropdown.Item as="button">Category 2</Dropdown.Item>
-            <Dropdown.Item as="button">Category 3</Dropdown.Item>
-          </DropdownButton>
+        <div className="w-100 d-flex justify-content-end">
+        <SearchForm onSearch={handleSearch} />
         </div>
-
-        <Table striped bordered hover>
-          <thead>
+        <table className="table table-striped">
+          <thead className="thead-dark">
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">Index</th>
               <th scope="col">SubCategory name</th>
               <th scope="col">SubCategory Image</th>
               <th scope="col">status</th>
@@ -130,141 +62,53 @@ const AdminSubCategory = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Attaa</td>
-              <td>image</td>
-              <td>
-                <span className="badge bg-success">Approved</span>
-              </td>
-              <td>
-                <ViewIcon />
-
-                <span onClick={handleShow}>
-                  <EditIcon />
-                </span>
-                <DeleteIcon />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Attaa</td>
-              <td>
-                <img
-                  src={previewImage}
-                  alt={previewImage}
-                  className="category-image"
-                  height={50}
-                  width={50}
-                />
-              </td>
-              <td>
-                <span className="badge bg-danger">Rejected</span>
-              </td>
-              <td>
-                <ViewIcon />
-                <span onClick={handleShow}>
-                  <EditIcon />
-                </span>
-                <DeleteIcon />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>Attaa</td>
-              <td>image</td>
-              <td>
-                <span className="badge bg-secondary">Pending</span>
-              </td>
-              <td>
-                <ViewIcon />
-                <span onClick={handleShow}>
-                  <EditIcon />
-                </span>
-                <DeleteIcon />
-              </td>
-            </tr>
+            {subCategories &&
+              subCategories.map((subCategory, index) => {
+                const { subCategoryName, images, _id } = subCategory;
+                const overallIndex = (page - 1) * limit + index;
+                return (
+                  <tr key={index}>
+                    <th scope="row">{overallIndex + 1}</th>
+                    <td>{subCategoryName}</td>
+                    <td>
+                      {images &&
+                        images?.map((image, index) => (
+                          <Image
+                            key={index}
+                            src={image}
+                            alt={subCategory?.subCategoryName}
+                            style={{
+                              width: "50px",
+                              height: "auto",
+                              padding: "5px",
+                            }}
+                            thumbnail
+                          />
+                        ))}
+                    </td>
+                    <td>
+                      <span className="badge bg-success">Approved</span>
+                    </td>
+                    <td>
+                      <EditSubCateogry id={_id} subCategory={subCategory} fetchData={() => fetchData(page)}/>
+                      <ViewSubCategory id={_id} />
+                      <DeleteSubCategory id={_id} fetchData={() => fetchData(page)} />
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
-        </Table>
+        </table>
+        {totalPages > 1 && (
+          <div className="d-flex justify-content-center my-5">
+            <PaginationComponent
+              page={page}
+              totalPages={totalPages}
+              handlePageClick={handlePageClick}
+            />
+          </div>
+        )}
       </div>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        animation={false}
-        centered
-        size="md"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Add New SubCategory</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            {({ setFieldValue }) => (
-              <Form className="category-form">
-                <div className="form-group mb-3">
-                  <label htmlFor="name">SubCategory Name</label>
-                  <Field type="text" id="name" name="name" />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="error-message"
-                  />
-                </div>
-
-                <div className="form-group mb-3">
-                  <label htmlFor="image">SubCategory Image</label>
-                  <input
-                    id="image"
-                    name="image"
-                    type="file"
-                    onChange={(event) => {
-                      const file = event.currentTarget.files[0];
-                      setFieldValue("image", file);
-
-                      // Set preview image
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setPreviewImage(reader.result);
-                      };
-                      reader.readAsDataURL(file);
-                    }}
-                  />
-                  <ErrorMessage
-                    name="image"
-                    component="div"
-                    className="error-message"
-                  />
-                </div>
-
-                {previewImage && (
-                  <div className="image-preview">
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="preview-image"
-                      height={100}
-                      width={100}
-                    />
-                  </div>
-                )}
-
-                <button type="submit" className="btn btn-primary">
-                  Add SubCategory
-                </button>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };

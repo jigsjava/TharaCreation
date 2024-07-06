@@ -90,7 +90,7 @@ const CategoryManager = () => {
                       <span className="badge bg-success">Approved</span>
                     </td>
                     <td>
-                      <EditCateogry id={_id} fetchData={() => fetchData(page)}/>
+                      <EditCateogry id={_id} fetchData={() => fetchData(page)} category={category}/>
                       <ViewCategory id={_id} />
                       <DeleteCategory id={_id} fetchData={() => fetchData(page)} />
                     </td>

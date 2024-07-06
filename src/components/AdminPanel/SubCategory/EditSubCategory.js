@@ -6,11 +6,11 @@ import { EditIcon } from '../../../assets/icons';
 import { toast } from 'react-toastify';
 import AxiosInstance from '../../../helpers/AxiosRequest';
 
-const EditCateogry = ({id,fetchData,category}) => {
+const EditSubCateogry = ({id,fetchData,subCategory}) => {
     const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
-
+ 
   const handleClose = () => {
     setShow(false);
     setPreviewImage(null);
@@ -20,23 +20,22 @@ const EditCateogry = ({id,fetchData,category}) => {
   }
 
   const handleUpdateSubmit = async (values, { setErrors, setSubmitting,resetForm }) => {
- 
     setIsLoading(true);
     const formData = new FormData();
-    formData.append('categoryName', values.categoryName);
+    formData.append('subCategoryName', values.subCategoryName);
     if (values.image) {
-      formData.append('categoryImages', values.image);
+      formData.append('subCategoryImages', values.image);
     }
 
     try {
-      const response = await AxiosInstance.post(`/category/updatecategory?id=${id}`, formData, {
+      const response = await AxiosInstance.post(`/subcategory/updatesubcategory?id=${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       if (response.status === 200) {
-        toast.success("Category updated successfully", {
+        toast.success("SubCategory updated successfully", {
           position: toast.POSITION.TOP_CENTER,
         });
         fetchData();
@@ -62,10 +61,10 @@ const EditCateogry = ({id,fetchData,category}) => {
   };
 
   const validationSchema = Yup.object().shape({
-    categoryName: Yup.string()
-      .required('Category name is required')
-      .min(5, 'Category name must be at least 5 characters')
-      .max(30, 'Category name must be at most 30 characters'),
+    subCategoryName: Yup.string()
+      .required('SubCategory name is required')
+      .min(5, 'SubCategory name must be at least 5 characters')
+      .max(30, 'SubCategory name must be at most 30 characters'),
     image: Yup.mixed()
       .test(
         'fileSize',
@@ -102,12 +101,12 @@ const EditCateogry = ({id,fetchData,category}) => {
         size="md"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Update Category</Modal.Title>
+          <Modal.Title>Update SubCategory</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
             initialValues={{
-              categoryName: category.categoryName || "",
+              subCategoryName: subCategory.subCategoryName || "",
               image: null,
             }}
             validationSchema={validationSchema}
@@ -123,19 +122,19 @@ const EditCateogry = ({id,fetchData,category}) => {
               touched,
             }) => (
               <FormikForm>
-                <Form.Group className="mb-3" controlId="categoryName">
-                  <Form.Label>Category Name</Form.Label>
+                <Form.Group className="mb-3" controlId="subCategoryName">
+                  <Form.Label>SubCategory Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="categoryName"
-                    value={values.categoryName}
-                    placeholder="Enter category name"
+                    name="subCategoryName"
+                    value={values.subCategoryName}
+                    placeholder="Enter SubCategory name"
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  {touched.categoryName && errors.categoryName && (
+                  {touched.subCategoryName && errors.subCategoryName && (
                     <Form.Text className="font16Red">
-                      {errors.categoryName}
+                      {errors.subCategoryName}
                     </Form.Text>
                   )}
                 </Form.Group>
@@ -162,12 +161,12 @@ const EditCateogry = ({id,fetchData,category}) => {
                      </div>
                   </div>
                 )}
-                {category.images &&
-                  category.images.length > 0 && (
+                {subCategory.images &&
+                  subCategory.images.length > 0 && (
                     <div className="mb-3">
                       <Form.Label>Current Image</Form.Label>
                       <div>
-                        {category.images.map((image, index) => (
+                        {subCategory.images.map((image, index) => (
                           <Image
                             key={index}
                             src={image}
@@ -186,7 +185,7 @@ const EditCateogry = ({id,fetchData,category}) => {
                       <Spinner animation="border" size="sm me-2" /> Updating...
                     </>
                   ) : (
-                    "Update Category"
+                    "Update SubCategory"
                   )}
                 </Button>
               </FormikForm>
@@ -203,4 +202,4 @@ const EditCateogry = ({id,fetchData,category}) => {
   );
 }
 
-export default EditCateogry
+export default EditSubCateogry
