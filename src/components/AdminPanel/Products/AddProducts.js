@@ -10,6 +10,7 @@ const AddProducts = ({ fetchData }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,20 +28,22 @@ const AddProducts = ({ fetchData }) => {
 
   useEffect(() => {
     const fetchSubCategories = async () => {
-      try {
-        const response = await AxiosInstance.get("/subcategory/getsubcategory");
-        setSubCategories(response?.data?.data);
-      } catch (error) {
-        toast.error("Failed to load categories", {
-          position: toast.POSITION.TOP_CENTER,
-        });
+      if (selectedCategory) {
+        try {
+          const response = await AxiosInstance.get(`/subcategory/getsubcategory?categoryId=${selectedCategory}`);
+          setSubCategories(response?.data?.data);
+        } catch (error) {
+          toast.error("Failed to load subcategories", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      } else {
+        setSubCategories([]);
       }
     };
     fetchSubCategories();
-  }, []);
+  }, [selectedCategory]);
 
-  // console.log("categories",categories)
-  // console.log("subCategories",subCategories)
   const initialValues = {
     productName: "",
     category: "",
@@ -152,7 +155,10 @@ const AddProducts = ({ fetchData }) => {
                         as="select"
                         name="category"
                         value={values.category}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          handleChange(e);
+                          setSelectedCategory(e.target.value); // Update the selected category
+                        }}
                         onBlur={handleBlur}
                       >
                         <option value="">Select a category</option>
@@ -177,6 +183,7 @@ const AddProducts = ({ fetchData }) => {
                         value={values.subcategory}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        disabled={!selectedCategory}
                       >
                         <option value="">Select a SubCategory</option>
                         {subCategories?.map((subcategory) => (

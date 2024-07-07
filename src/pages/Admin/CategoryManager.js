@@ -11,7 +11,7 @@ import AddNewCategory from "../../components/AdminPanel/Category/AddNewCategory"
 import { Image } from "react-bootstrap";
 
 const CategoryManager = () => {
-  const limit = 2;
+  const limit = 4;
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);

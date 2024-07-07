@@ -11,7 +11,7 @@ import EditProducts from "../../components/AdminPanel/Products/EditPoducts"
 import AddNewProducts from '../../components/AdminPanel/Products/AddProducts'
 
 const AdminProduct = () => {
-  const limit = 2;
+  const limit = 10;
   const [product, setProduct] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
@@ -86,7 +86,8 @@ const AdminProduct = () => {
                             alt={products?.productName}
                             style={{
                               width: "50px",
-                              height: "auto",
+                              
+                              height: "40px",
                               padding: "5px",
                             }}
                             thumbnail

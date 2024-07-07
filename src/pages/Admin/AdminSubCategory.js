@@ -11,7 +11,7 @@ import EditSubCateogry from "../../components/AdminPanel/SubCategory/EditSubCate
 import AddNewSubCategory from '../../components/AdminPanel/SubCategory/AddNewSubCategory'
 
 const AdminSubCategory = () => {
-  const limit = 2;
+  const limit = 6;
   const [subCategories, setSubCategories] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
