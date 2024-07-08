@@ -128,11 +128,13 @@ const AddProducts = ({ fetchData }) => {
 
   return (
     <div
-      style={{ background: "#FFF5DC", padding: "20px", borderRadius: "6px" }}
+      style={{ background: "#FFF5DC", padding: "30px 50px", borderRadius: "6px" }}
     >
-      <h1 className="text-center mb-4">Add New Product</h1>
-      <div className="row d-flex justify-content-center">
-        <div className="col-lg-6 col-md-8 col-sm-12">
+      <div className="d-flex justify-content-center">
+      <h1 className="text-center mb-4" style={{borderBottom:'2px solid #000000'}}>Add New Product</h1>
+      </div>
+     
+      <div className="">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -148,8 +150,8 @@ const AddProducts = ({ fetchData }) => {
                 touched,
               }) => {
                 return (
-                  <FormikForm>
-                    <Form.Group className="mb-3" controlId="category">
+                  <FormikForm className="row g-3">
+                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="category">
                       <Form.Label>Category</Form.Label>
                       <Form.Control
                         as="select"
@@ -175,7 +177,7 @@ const AddProducts = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="subcategory">
+                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="subcategory">
                       <Form.Label>SubCategory</Form.Label>
                       <Form.Control
                         as="select"
@@ -199,7 +201,7 @@ const AddProducts = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="productName">
+                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="productName">
                       <Form.Label>Product Name</Form.Label>
                       <Form.Control
                         type="text"
@@ -216,7 +218,7 @@ const AddProducts = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="image">
+                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="image">
                       <Form.Label>Image Upload</Form.Label>
                       <Form.Control
                         type="file"
@@ -247,7 +249,7 @@ const AddProducts = ({ fetchData }) => {
                       </div>
                     )}
 
-                    <Form.Group className="mb-3" controlId="price">
+                    <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="price">
                       <Form.Label>Price</Form.Label>
                       <Form.Control
                         type="text"
@@ -264,7 +266,7 @@ const AddProducts = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="discountprice">
+                    <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="discountprice">
                       <Form.Label>Discount Price</Form.Label>
                       <Form.Control
                         type="text"
@@ -281,7 +283,7 @@ const AddProducts = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="quantity">
+                    <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="quantity">
                       <Form.Label>Quanttity</Form.Label>
                       <Form.Control
                         type="text"
@@ -297,6 +299,7 @@ const AddProducts = ({ fetchData }) => {
                         </Form.Text>
                       )}
                     </Form.Group>
+                    <div className="d-flex justify-content-center mt-4">
                     <Button type="submit" disabled={isLoading}>
                       {isLoading ? (
                         <>
@@ -307,12 +310,13 @@ const AddProducts = ({ fetchData }) => {
                         "Add New SubCategory"
                       )}
                     </Button>
+                    </div>
+                   
                   </FormikForm>
                 );
               }
             }
           </Formik>
-        </div>
       </div>
     </div>
   );

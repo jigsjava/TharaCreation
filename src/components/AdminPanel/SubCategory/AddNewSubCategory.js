@@ -98,11 +98,10 @@ const AddNewSubCategory = ({ fetchData }) => {
 
   return (
     <div
-      style={{ background: "#FFF5DC", padding: "20px", borderRadius: "6px" }}
+      style={{ background: "#FFF5DC", padding: "30px 50px", borderRadius: "6px" }}
     >
-      <h1 className="text-start mb-4">Add New subCategory</h1>
-      <div className="row d-flex justify-content-center">
-        <div className="col-lg-6 col-md-8 col-sm-12">
+      <h1 className="text-center mb-4">Add New subCategory</h1>
+      <div className="">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -118,8 +117,11 @@ const AddNewSubCategory = ({ fetchData }) => {
                 touched,
               }) => {
                 return (
-                  <FormikForm>
-                    <Form.Group className="mb-3" controlId="category">
+                  <FormikForm className="row">
+                    <Form.Group
+                      className="mb-3 col-md-6 col-sm-12"
+                      controlId="category"
+                    >
                       <Form.Label>Category</Form.Label>
                       <Form.Control
                         as="select"
@@ -142,7 +144,10 @@ const AddNewSubCategory = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="subCategoryName">
+                    <Form.Group
+                      className="mb-3 col-md-6 col-sm-12"
+                      controlId="subCategoryName"
+                    >
                       <Form.Label>SubCategory Name</Form.Label>
                       <Form.Control
                         type="text"
@@ -159,7 +164,10 @@ const AddNewSubCategory = ({ fetchData }) => {
                       )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="image">
+                    <Form.Group
+                      className="mb-3 col-md-6 col-sm-12"
+                      controlId="image"
+                    >
                       <Form.Label>Image Upload</Form.Label>
                       <Form.Control
                         type="file"
@@ -190,22 +198,23 @@ const AddNewSubCategory = ({ fetchData }) => {
                       </div>
                     )}
 
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? (
-                        <>
-                          <Spinner animation="border" size="sm me-2" />
-                          Adding ...
-                        </>
-                      ) : (
-                        "Add New SubCategory"
-                      )}
-                    </Button>
+                    <div className="d-flex justify-content-center mt-3">
+                      <Button type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                          <>
+                            <Spinner animation="border" size="sm me-2" />
+                            Adding ...
+                          </>
+                        ) : (
+                          "Add New SubCategory"
+                        )}
+                      </Button>
+                    </div>
                   </FormikForm>
                 );
               }
             }
           </Formik>
-        </div>
       </div>
     </div>
   );

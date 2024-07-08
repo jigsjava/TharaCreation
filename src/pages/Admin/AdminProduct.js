@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Table from 'react-bootstrap/Table';
 import "./scss/CategoryManager.scss";
 import SearchForm from "../../components/SearchForm";
 import AxiosInstance from "../../helpers/AxiosRequest";
@@ -51,19 +52,19 @@ const AdminProduct = () => {
         <div className="w-100 d-flex justify-content-end">  
         <SearchForm onSearch={handleSearch} />
         </div>
-        <table className="table table-striped">
+        <Table striped bordered hover responsive>
           <thead className="thead-dark">
             <tr>
-              <th scope="col">Index</th>
-              <th scope="col">CategoryName</th>
-              <th scope="col">SubCategory name</th>
-              <th scope="col">Product name</th>
-              <th scope="col">SubCategory Image</th>
-              <th scope="col">Price</th>
-              <th scope="col">Discount Price</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">status</th>
-              <th scope="col">Action</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Index</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Category</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>SubCategory</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Product</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Image</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Price</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Dis Price</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Quantity</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>status</th>
+              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -110,7 +111,7 @@ const AdminProduct = () => {
                 );
               })}
           </tbody>
-        </table>
+        </Table>
         {totalPages > 1 && (
           <div className="d-flex justify-content-center my-5">
             <PaginationComponent

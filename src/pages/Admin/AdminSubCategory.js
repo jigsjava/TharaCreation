@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Table from 'react-bootstrap/Table';
 import "./scss/CategoryManager.scss";
 import SearchForm from "../../components/SearchForm";
 import AxiosInstance from "../../helpers/AxiosRequest";
@@ -48,11 +49,11 @@ const AdminSubCategory = () => {
     <div className="category-manager">
       <AddNewSubCategory fetchData={() => fetchData(page)} />
       <div className="category-list">
-        <h3>SubCategory List</h3>
+        <h3 className="mb-0">SubCategory List</h3>
         <div className="w-100 d-flex justify-content-end">  
         <SearchForm onSearch={handleSearch} />
         </div>
-        <table className="table table-striped">
+        <Table className="striped bordered hover">
           <thead className="thead-dark">
             <tr>
               <th scope="col">Index</th>
@@ -101,9 +102,9 @@ const AdminSubCategory = () => {
                 );
               })}
           </tbody>
-        </table>
+        </Table>
         {totalPages > 1 && (
-          <div className="d-flex justify-content-center my-5">
+          <div className="d-flex justify-content-center mt-5">
             <PaginationComponent
               page={page}
               totalPages={totalPages}

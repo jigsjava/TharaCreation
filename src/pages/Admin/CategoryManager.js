@@ -47,8 +47,8 @@ const CategoryManager = () => {
     <div className="category-manager">
       <AddNewCategory fetchData={() => fetchData(page)} />
       <div className="category-list">
-        <h3>Category List</h3>
-        <div className="w-100 d-flex justify-content-end">
+        <h2 className="mb-0">Category List</h2>
+        <div className="w-100 d-flex justify-content-end my-0">
         <SearchForm onSearch={handleSearch} />
         </div>
         <table className="table table-striped">
@@ -100,7 +100,7 @@ const CategoryManager = () => {
           </tbody>
         </table>
         {totalPages > 1 && (
-          <div className="d-flex justify-content-center my-5">
+          <div className="d-flex justify-content-center mt-4">
             <PaginationComponent
               page={page}
               totalPages={totalPages}
