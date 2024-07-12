@@ -8,7 +8,7 @@ import DeleteCategory from "../../components/AdminPanel/Category/DeleteCategory"
 import ViewCategory from "../../components/AdminPanel/Category/ViewCategory";
 import EditCateogry from "../../components/AdminPanel/Category/EditCateogry";
 import AddNewCategory from "../../components/AdminPanel/Category/AddNewCategory";
-import { Image } from "react-bootstrap";
+import { Image,Form } from "react-bootstrap";
 
 const CategoryManager = () => {
   const limit = 4;
@@ -42,6 +42,18 @@ const CategoryManager = () => {
     setSearchQuery(query);
     setPage(1); // Reset page to 1 on search
   };
+
+  const handleStatusToggle = async (id, newStatus) => {
+    try {
+      // Assuming you have an endpoint to update the category status
+      await AxiosInstance.put(`/category/updatestatus/${id}`, { status: newStatus });
+      // Refetch data after status update
+      fetchData(page);
+      toast.success("Status updated successfully");
+    } catch (error) {
+      toast.error("Error updating status");
+    }
+  };
   
   return (
     <div className="category-manager">
@@ -64,7 +76,7 @@ const CategoryManager = () => {
           <tbody>
             {categories &&
               categories.map((category, index) => {
-                const { categoryName, images, _id } = category;
+                const { categoryName, images, _id,status } = category;
                 const overallIndex = (page - 1) * limit + index;
                 return (
                   <tr key={index}>
@@ -87,7 +99,13 @@ const CategoryManager = () => {
                         ))}
                     </td>
                     <td>
-                      <span className="badge bg-success">Approved</span>
+                    <Form.Check
+                      type="switch"
+                      id={`switch-${_id}`}
+                      label={status ? "Approved" : "Closed"}
+                      checked={status}
+                      onChange={(e) => handleStatusToggle(_id, e.target.checked)}
+                    />
                     </td>
                     <td>
                       <EditCateogry id={_id} fetchData={() => fetchData(page)} category={category}/>
