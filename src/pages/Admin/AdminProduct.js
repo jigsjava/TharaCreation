@@ -5,11 +5,12 @@ import SearchForm from "../../components/SearchForm";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/Pagination";
-import { Image } from "react-bootstrap";
+import { Image,Form } from "react-bootstrap";
 import DeleteProducts from "../../components/AdminPanel/Products/DeleteProducts"
 import ViewProducts from  '../../components/AdminPanel/Products/ViewProducts'
 import EditProducts from "../../components/AdminPanel/Products/EditPoducts"
 import AddNewProducts from '../../components/AdminPanel/Products/AddProducts'
+import TextEditor from "../../components/Common/TextEditor";
 
 const AdminProduct = () => {
   const limit = 10;
@@ -44,6 +45,18 @@ const AdminProduct = () => {
     setPage(1); // Reset page to 1 on search
   };
 
+    
+  const handleStatusToggle = async (id, newStatus) => {
+    try {
+      await AxiosInstance.put(`/product/updatestatus/${id}`, { status: newStatus });
+      fetchData(page);
+      toast.success("Status updated successfully");
+    } catch (error) {
+      toast.error("Error updating status");
+    }
+  };
+
+
   return (
     <div className="category-manager">
       <AddNewProducts fetchData={() => fetchData(page)} />
@@ -55,23 +68,28 @@ const AdminProduct = () => {
         <Table striped bordered hover responsive>
           <thead className="thead-dark">
             <tr>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Index</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Category</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>SubCategory</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Product</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Image</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Price</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Dis Price</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Quantity</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>status</th>
-              <th scope="col" className="text-center" style={{whiteSpace:'nowrap'}}>Action</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Index</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Category</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>SubCategory</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Product</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Image</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Price</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Dis Price</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Quantity</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>status</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Action</th>
+              <th scope="col" style={{whiteSpace:'nowrap',textAlign:'center'}}>Description</th>
             </tr>
           </thead>
           <tbody>
             {product &&
               product?.map((products, index) => {
-                const { productName, images, _id,subCategoryData,categoryData,price,discountPrice,quantity} = products;
+                const {description,status,productName, images, _id,subCategoryData,categoryData,price,discountPrice,quantity} = products;
                 const overallIndex = (page - 1) * limit + index;
+
+                // Check if description exists and is a non-empty string
+                const cleanedDescription = description?.replace(/<\/?p>/g, '');
+
                 return (
                   <tr key={index}>
                     <th scope="row">{overallIndex + 1}</th>
@@ -87,7 +105,7 @@ const AdminProduct = () => {
                             alt={products?.productName}
                             style={{
                               width: "50px",
-                              
+
                               height: "40px",
                               padding: "5px",
                             }}
@@ -99,14 +117,31 @@ const AdminProduct = () => {
                     <td>{discountPrice}</td>
                     <td>{quantity}</td>
                     <td>
-                      <span className="badge bg-success">Approved</span>
+                      <Form.Check
+                        type="switch"
+                        id={`switch-${_id}`}
+                        label={status ? "Approved" : "Closed"}
+                        checked={status}
+                        onChange={(e) =>
+                          handleStatusToggle(_id, e.target.checked)
+                        }
+                      />
                     </td>
                     <td>
-                      <EditProducts id={_id} products={products} fetchData={() => fetchData(page)}/>
-                      <ViewProducts products={products}/>
-                      <DeleteProducts id={_id} fetchData={() => fetchData(page)} />
+                      <EditProducts
+                        id={_id}
+                        products={products}
+                        fetchData={() => fetchData(page)}
+                      />
+                      <ViewProducts products={products} />
+                      <DeleteProducts
+                        id={_id}
+                        fetchData={() => fetchData(page)}
+                      />
                     </td>
-                   
+                    <td>
+                     {cleanedDescription}
+                    </td>
                   </tr>
                 );
               })}

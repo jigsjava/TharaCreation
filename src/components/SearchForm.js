@@ -23,7 +23,7 @@ const SearchForm = ({ onSearch }) => {
       <Form.Control
       style={{border:0,fillOpacity:0}}
         type="text"
-        placeholder="Search by category name"
+        placeholder="Search by name"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="me-2"

@@ -5,27 +5,29 @@ import { Form, Button, Modal, Spinner, Image } from 'react-bootstrap';
 import { EditIcon } from '../../../assets/icons';
 import { toast } from 'react-toastify';
 import AxiosInstance from '../../../helpers/AxiosRequest';
+import TextEditor from '../../Common/TextEditor';
 
-const EditProducts = ({id,fetchData,products}) => {
+const EditProducts = ({ id, fetchData, products }) => {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
- 
+
   const handleClose = () => {
     setShow(false);
     setPreviewImage(null);
   }
-  const handleShow = async() => {
+  const handleShow = async () => {
     setShow(true);
   }
 
-  const handleUpdateSubmit = async (values, { setErrors, setSubmitting,resetForm }) => {
+  const handleUpdateSubmit = async (values, { setErrors, setSubmitting, resetForm }) => {
     setIsLoading(true);
     const formData = new FormData();
     formData.append('productName', values.productName);
     formData.append('price', values.price);
-    formData.append('discountPrice', values.discountprice);
+    formData.append('discountPrice', values.discountPrice);
     formData.append('quantity', values.quantity);
+    formData.append('description', values.description);
     if (values.image) {
       formData.append('productImages', values.image);
     }
@@ -69,6 +71,8 @@ const EditProducts = ({id,fetchData,products}) => {
       .min(5, 'Product name must be at least 5 characters')
       .max(30, 'Product name must be at most 30 characters'),
     image: Yup.mixed()
+    .nullable()
+    .notRequired()
       .test(
         'fileSize',
         'File size must be less than 3 MB',
@@ -109,6 +113,10 @@ const EditProducts = ({id,fetchData,products}) => {
             initialValues={{
               productName: products.productName || "",
               image: null,
+              price: products.price || "",
+              discountPrice: products.discountPrice || "",
+              quantity: products.quantity || "",
+              description: products.description || '',
             }}
             validationSchema={validationSchema}
             onSubmit={handleUpdateSubmit}
@@ -129,7 +137,7 @@ const EditProducts = ({id,fetchData,products}) => {
                     type="text"
                     name="productName"
                     value={values.productName}
-                    placeholder="Enter SubCategory name"
+                    placeholder="Enter Product name"
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
@@ -139,94 +147,124 @@ const EditProducts = ({id,fetchData,products}) => {
                     </Form.Text>
                   )}
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="price">
-                  <Form.Label>Price</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="price"
-                    value={values.price}
-                    placeholder="Enter Price"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                <div className='row'>
+                  <Form.Group className="mb-3 col-lg-4" controlId="price">
+                    <Form.Label>Price</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="price"
+                      value={values.price}
+                      placeholder="Enter Price"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    {touched.price && errors.price && (
+                      <Form.Text className="font16Red">
+                        {errors.price}
+                      </Form.Text>
+                    )}
+                  </Form.Group>
+                  <Form.Group className="mb-3 col-lg-4" controlId="discountPrice">
+                    <Form.Label>Discount Price</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="discountPrice"
+                      value={values.discountPrice}
+                      placeholder="Enter Discount Price"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    {touched.discountPrice && errors.discountPrice && (
+                      <Form.Text className="font16Red">
+                        {errors.discountPrice}
+                      </Form.Text>
+                    )}
+                  </Form.Group>
+                  <Form.Group className="mb-3 col-lg-4" controlId="quantity">
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="quantity"
+                      value={values.quantity}
+                      placeholder="Enter Quantity"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    {touched.quantity && errors.quantity && (
+                      <Form.Text className="font16Red">
+                        {errors.quantity}
+                      </Form.Text>
+                    )}
+                  </Form.Group>
+                </div>
+
+                <Form.Group
+                  className="mb-3 col-md-12 col-sm-12"
+                  controlId="description"
+                >
+                  <Form.Label>Description</Form.Label>
+                  <TextEditor
+                    value={values.description}
+                    onChange={(value) => setFieldValue("description", value)}
                   />
-                  {touched.price && errors.price && (
+                  {touched.description && errors.description && (
                     <Form.Text className="font16Red">
-                      {errors.price}
+                      {errors.description}
                     </Form.Text>
                   )}
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="discountprice">
-                  <Form.Label>Discount Price</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="discountprice"
-                    value={values.discountprice}
-                    placeholder="Enter Discount Price"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  {touched.discountprice && errors.discountprice && (
-                    <Form.Text className="font16Red">
-                      {errors.discountprice}
-                    </Form.Text>
-                  )}
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="quantity">
-                  <Form.Label>Quantity</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="quantity"
-                    value={values.quantity}
-                    placeholder="Enter Quantity"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  {touched.quantity && errors.quantity && (
-                    <Form.Text className="font16Red">
-                      {errors.quantity}
-                    </Form.Text>
-                  )}
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="image">
-                  <Form.Label>Image Upload</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="image"
-                    onChange={(event) => {
-                      setFieldValue("image", event.currentTarget.files[0]);
-                      setPreviewImage(URL.createObjectURL(event.currentTarget.files[0]))
-                    }}
-                    onBlur={handleBlur}
-                  />
-                  {touched.image && errors.image && (
-                    <Form.Text className="font16Red">{errors.image}</Form.Text>
-                  )}
-                </Form.Group>
-                {previewImage && (
-                  <div className="mb-3">
-                     <Form.Label>Preview Image</Form.Label>
-                     <div>
-                    <Image src={previewImage} alt="Preview" thumbnail width={100}/>
-                     </div>
+
+                <div className='row'>
+                  <div className='col-lg-4'>
+                    <Form.Group className="mb-3" controlId="image">
+                      <Form.Label>Image Upload</Form.Label>
+                      <Form.Control
+                        type="file"
+                        name="image"
+                        onChange={(event) => {
+                          const file = event?.currentTarget?.files[0];
+                          if (file) {
+                            setFieldValue("image", file);
+                            setPreviewImage(URL.createObjectURL(file));
+                          }
+                        }}
+                        onBlur={handleBlur}
+                      />
+                      {touched.image && errors.image && (
+                        <Form.Text className="font16Red">{errors.image}</Form.Text>
+                      )}
+                    </Form.Group>
                   </div>
-                )}
-                {products.images &&
-                  products.images.length > 0 && (
-                    <div className="mb-3">
-                      <Form.Label>Current Image</Form.Label>
-                      <div>
-                        {products?.images?.map((image, index) => (
-                          <Image
-                            key={index}
-                            src={image}
-                            alt="Current category"
-                            thumbnail
-                            width={100}
-                          />
-                        ))}
+                  <div className='col-lg-4'>
+                    {previewImage && (
+                      <div className="mb-3">
+                        <Form.Label>Preview Image</Form.Label>
+                        <div>
+                          <Image src={previewImage} alt="Preview" thumbnail width={100} />
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  <div className='col-lg-4'>
+                    {products.images &&
+                      products.images.length > 0 && (
+                        <div className="mb-3">
+                          <Form.Label>Current Image</Form.Label>
+                          <div>
+                            {products?.images?.map((image, index) => (
+                              <Image
+                                key={index}
+                                src={image}
+                                alt="Current category"
+                                thumbnail
+                                width={100}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                </div>
 
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (
@@ -234,7 +272,7 @@ const EditProducts = ({id,fetchData,products}) => {
                       <Spinner animation="border" size="sm me-2" /> Updating...
                     </>
                   ) : (
-                    "Update SubCategory"
+                    "Update Product"
                   )}
                 </Button>
               </FormikForm>
@@ -251,4 +289,4 @@ const EditProducts = ({id,fetchData,products}) => {
   );
 }
 
-export default EditProducts
+export default EditProducts;

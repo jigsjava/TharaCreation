@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Form as FormikForm } from "formik";
+import { Formik, Form as FormikForm, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Form, Button, Spinner, Image } from "react-bootstrap";
 import AxiosInstance from "../../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
+import TextEditor from "../../Common/TextEditor";
 
 const AddProducts = ({ fetchData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -30,7 +31,9 @@ const AddProducts = ({ fetchData }) => {
     const fetchSubCategories = async () => {
       if (selectedCategory) {
         try {
-          const response = await AxiosInstance.get(`/subcategory/getsubcategory?categoryId=${selectedCategory}`);
+          const response = await AxiosInstance.get(
+            `/subcategory/getsubcategory?categoryId=${selectedCategory}`
+          );
           setSubCategories(response?.data?.data);
         } catch (error) {
           toast.error("Failed to load subcategories", {
@@ -47,11 +50,12 @@ const AddProducts = ({ fetchData }) => {
   const initialValues = {
     productName: "",
     category: "",
-    subcategory:'',
+    subcategory: "",
     image: null,
-    price:'',
-    discountprice:'',
-    quantity:'',
+    price: "",
+    discountprice: "",
+    quantity: "",
+    description: "",
   };
 
   const validationSchema = Yup.object().shape({
@@ -60,7 +64,16 @@ const AddProducts = ({ fetchData }) => {
       .min(5, "Product name must be at least 5 characters")
       .max(30, "Product name must be at most 30 characters"),
     category: Yup.string().required("Category is required"),
-    subcategory:Yup.string().required("SubCategory is required"),
+    subcategory: Yup.string().required("SubCategory is required"),
+    description: Yup.string()
+      .required("Description is required")
+      .min(5, "Description must be at least 5 characters")
+      .max(200, "Description must be at most 200 characters"),
+    price: Yup.number().required("Price is required"),
+    discountprice: Yup.number()
+      .required("Discount Price is required")
+      .lessThan(Yup.ref("price"), "Discount Price must be less than Price"),
+    quantity: Yup.number().required("Quantity is required"),
     image: Yup.mixed()
       .required("Image is required")
       .test("fileSize", "File size must be less than 3 MB", (value) => {
@@ -81,6 +94,7 @@ const AddProducts = ({ fetchData }) => {
     { resetForm, setErrors, setSubmitting }
   ) => {
     setIsLoading(true);
+
     const formData = new FormData();
     formData.append("productName", values.productName);
     formData.append("categoryId", values.category);
@@ -89,18 +103,15 @@ const AddProducts = ({ fetchData }) => {
     formData.append("price", values.price);
     formData.append("discountPrice", values.discountprice);
     formData.append("quantity", values.quantity);
+    formData.append("description", values.description);
 
-    
     try {
       const response = await AxiosInstance.post(
         "/product/addproduct",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       if (response.status === 200) {
         toast.success("Product added successfully", {
           position: toast.POSITION.TOP_CENTER,
@@ -128,195 +139,208 @@ const AddProducts = ({ fetchData }) => {
 
   return (
     <div
-      style={{ background: "#FFF5DC", padding: "30px 50px", borderRadius: "6px" }}
+      style={{
+        background: "#FFF5DC",
+        padding: "30px 50px",
+        borderRadius: "6px",
+      }}
     >
       <div className="d-flex justify-content-center">
-      <h1 className="text-center mb-4" style={{borderBottom:'2px solid #000000'}}>Add New Product</h1>
+        <h1
+          className="text-center mb-4"
+          style={{ borderBottom: "2px solid #000000" }}
+        >
+          Add New Product
+        </h1>
       </div>
-     
+
       <div className="">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {
-              ({
-                setFieldValue,
-                handleChange,
-                handleBlur,
-                values,
-                errors,
-                touched,
-              }) => {
-                return (
-                  <FormikForm className="row g-3">
-                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="category">
-                      <Form.Label>Category</Form.Label>
-                      <Form.Control
-                        as="select"
-                        name="category"
-                        value={values.category}
-                        onChange={(e) => {
-                          handleChange(e);
-                          setSelectedCategory(e.target.value); // Update the selected category
-                        }}
-                        onBlur={handleBlur}
-                      >
-                        <option value="">Select a category</option>
-                        {categories?.map((category) => (
-                          <option key={category._id} value={category._id}>
-                            {category?.categoryName}
-                          </option>
-                        ))}
-                      </Form.Control>
-                      {touched.category && errors.category && (
-                        <Form.Text className="font16Red">
-                          {errors.category}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ setFieldValue, handleChange, values, errors, touched }) => (
+            <FormikForm className="row g-3">
+              <Form.Group
+                className="mb-3 col-md-6 col-sm-12"
+                controlId="category"
+              >
+                <Form.Label>Category</Form.Label>
+                <Field
+                  as="select"
+                  name="category"
+                  className="form-control"
+                  onChange={(e) => {
+                    handleChange(e);
+                    setSelectedCategory(e.target.value);
+                  }}
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.categoryName}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="category"
+                  component="div"
+                  className="font16Red"
+                />
+              </Form.Group>
 
-                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="subcategory">
-                      <Form.Label>SubCategory</Form.Label>
-                      <Form.Control
-                        as="select"
-                        name="subcategory"
-                        value={values.subcategory}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        disabled={!selectedCategory}
-                      >
-                        <option value="">Select a SubCategory</option>
-                        {subCategories?.map((subcategory) => (
-                          <option key={subcategory._id} value={subcategory._id}>
-                            {subcategory?.subCategoryName}
-                          </option>
-                        ))}
-                      </Form.Control>
-                      {touched.category && errors.category && (
-                        <Form.Text className="font16Red">
-                          {errors.category}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+              <Form.Group
+                className="mb-3 col-md-6 col-sm-12"
+                controlId="subcategory"
+              >
+                <Form.Label>SubCategory</Form.Label>
+                <Field
+                  as="select"
+                  name="subcategory"
+                  className="form-control"
+                  disabled={!selectedCategory}
+                >
+                  <option value="">Select a SubCategory</option>
+                  {subCategories.map((subcategory) => (
+                    <option key={subcategory._id} value={subcategory._id}>
+                      {subcategory.subCategoryName}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage name="subcategory" component="div" className="font16Red"/>
+              </Form.Group>
 
-                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="productName">
-                      <Form.Label>Product Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="productName"
-                        value={values.productName}
-                        placeholder="Enter Product name"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      {touched.productName && errors.productName && (
-                        <Form.Text className="font16Red">
-                          {errors.productName}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+              <Form.Group
+                className="mb-3 col-md-6 col-sm-12"
+                controlId="productName"
+              >
+                <Form.Label>Product Name</Form.Label>
+                <Field
+                  type="text"
+                  name="productName"
+                  className="form-control"
+                  placeholder="Enter Product name"
+                />
+                <ErrorMessage
+                  name="productName"
+                  component="div"
+                  className="font16Red"
+                />
+              </Form.Group>
 
-                    <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="image">
-                      <Form.Label>Image Upload</Form.Label>
-                      <Form.Control
-                        type="file"
-                        name="image"
-                        onChange={(event) => {
-                          setFieldValue("image", event.currentTarget.files[0]);
-                          setPreviewImage(
-                            URL.createObjectURL(event.currentTarget.files[0])
-                          );
-                        }}
-                        onBlur={handleBlur}
-                      />
-                      {touched.image && errors.image && (
-                        <Form.Text className="font16Red">
-                          {errors.image}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+              <Form.Group className="mb-3 col-md-6 col-sm-12" controlId="image">
+                <Form.Label>Image Upload</Form.Label>
+                <input
+                  type="file"
+                  name="image"
+                  className="form-control"
+                  onChange={(event) => {
+                    const file = event?.currentTarget?.files[0];
+                    if (file) {
+                      setFieldValue("image", file);
+                      setPreviewImage(URL.createObjectURL(file));
+                    }
+                  }}
+                />
+                {touched.image && errors.image ? (
+                  <div className="font16Red">{errors.image}</div>
+                ) : null}
+              </Form.Group>
 
-                    {previewImage && (
-                      <div className="mb-3">
-                        <Image
-                          src={previewImage}
-                          alt="Preview"
-                          thumbnail
-                          width={100}
-                        />
-                      </div>
-                    )}
+              {previewImage && (
+                <div className="mb-3">
+                  <Image
+                    src={previewImage}
+                    alt="Preview"
+                    thumbnail
+                    width={100}
+                  />
+                </div>
+              )}
 
-                    <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="price">
-                      <Form.Label>Price</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="price"
-                        value={values.price}
-                        placeholder="Enter Price"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      {touched.price && errors.price && (
-                        <Form.Text className="font16Red">
-                          {errors.price}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+              <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="price">
+                <Form.Label>Price</Form.Label>
+                <Field
+                  type="number"
+                  name="price"
+                  className="form-control"
+                  placeholder="Enter Price"
+                />
+                <ErrorMessage
+                  name="price"
+                  component="div"
+                  className="font16Red"
+                />
+              </Form.Group>
 
-                    <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="discountprice">
-                      <Form.Label>Discount Price</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="discountprice"
-                        value={values.discountprice}
-                        placeholder="Enter Discount Price"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      {touched.discountprice && errors.discountprice && (
-                        <Form.Text className="font16Red">
-                          {errors.discountprice}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+              <Form.Group
+                className="mb-3 col-md-4 col-sm-6"
+                controlId="discountprice"
+              >
+                <Form.Label>Discount Price</Form.Label>
+                <Field
+                  type="number"
+                  name="discountprice"
+                  className="form-control"
+                  placeholder="Enter Discount Price"
+                />
+                <ErrorMessage
+                  name="discountprice"
+                  component="div"
+                  className="font16Red"
+                />
+              </Form.Group>
 
-                    <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="quantity">
-                      <Form.Label>Quanttity</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="quantity"
-                        value={values.quantity}
-                        placeholder="Enter Quantity"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      {touched.quanttity && errors.quanttity && (
-                        <Form.Text className="font16Red">
-                          {errors.quanttity}
-                        </Form.Text>
-                      )}
-                    </Form.Group>
-                    <div className="d-flex justify-content-center mt-4">
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? (
-                        <>
-                          <Spinner animation="border" size="sm me-2" />
-                          Adding ...
-                        </>
-                      ) : (
-                        "Add New SubCategory"
-                      )}
-                    </Button>
-                    </div>
-                   
-                  </FormikForm>
-                );
-              }
-            }
-          </Formik>
+              <Form.Group
+                className="mb-3 col-md-4 col-sm-6"
+                controlId="quantity"
+              >
+                <Form.Label>Quantity</Form.Label>
+                <Field
+                  type="number"
+                  name="quantity"
+                  className="form-control"
+                  placeholder="Enter Quantity"
+                />
+                <ErrorMessage
+                  name="quantity"
+                  component="div"
+                  className="font16Red"
+                />
+              </Form.Group>
+
+              <Form.Group
+                className="mb-3 col-md-12 col-sm-12"
+                controlId="description"
+              >
+                <Form.Label>Description</Form.Label>
+                <TextEditor
+                  value={values?.description}
+                  onChange={(value) => setFieldValue("description", value)}
+                />
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="font16Red"
+                />
+              </Form.Group>
+
+              <div className="d-flex justify-content-center mt-4">
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Spinner animation="border" size="sm" className="me-2" />
+                      Adding ...
+                    </>
+                  ) : (
+                    "Add New Product"
+                  )}
+                </Button>
+              </div>
+            </FormikForm>
+          )}
+        </Formik>
       </div>
     </div>
   );

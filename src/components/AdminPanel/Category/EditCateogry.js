@@ -145,8 +145,11 @@ const EditCateogry = ({id,fetchData,category}) => {
                     type="file"
                     name="image"
                     onChange={(event) => {
-                      setFieldValue("image", event.currentTarget.files[0]);
-                      setPreviewImage(URL.createObjectURL(event.currentTarget.files[0]))
+                      const file = event?.currentTarget?.files[0];
+                      if (file) {
+                        setFieldValue("image", file);
+                        setPreviewImage(URL.createObjectURL(file));
+                      }
                     }}
                     onBlur={handleBlur}
                   />

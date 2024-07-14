@@ -5,7 +5,7 @@ import SearchForm from "../../components/SearchForm";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 import PaginationComponent from "../../components/Pagination";
-import { Image } from "react-bootstrap";
+import { Image,Form } from "react-bootstrap";
 import DeleteSubCategory from "../../components/AdminPanel/SubCategory/DeleteSubCategory"
 import ViewSubCategory from  '../../components/AdminPanel/SubCategory/ViewSubCategory'
 import EditSubCateogry from "../../components/AdminPanel/SubCategory/EditSubCategory"
@@ -17,7 +17,6 @@ const AdminSubCategory = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  
 
   useEffect(() => {
     fetchData(page);
@@ -45,6 +44,16 @@ const AdminSubCategory = () => {
     setPage(1); // Reset page to 1 on search
   };
   
+  const handleStatusToggle = async (id, newStatus) => {
+    try {
+      await AxiosInstance.put(`/subcategory/updatestatus/${id}`, { status: newStatus });
+      fetchData(page);
+      toast.success("Status updated successfully");
+    } catch (error) {
+      toast.error("Error updating status");
+    }
+  };
+
   return (
     <div className="category-manager">
       <AddNewSubCategory fetchData={() => fetchData(page)} />
@@ -67,7 +76,7 @@ const AdminSubCategory = () => {
           <tbody>
             {subCategories &&
               subCategories.map((subCategory, index) => {
-                const { subCategoryName, images, _id,categoryData} = subCategory;
+                const { subCategoryName, images, _id,categoryData,status} = subCategory;
                 const overallIndex = (page - 1) * limit + index;
                 return (
                   <tr key={index}>
@@ -91,7 +100,13 @@ const AdminSubCategory = () => {
                         ))}
                     </td>
                     <td>
-                      <span className="badge bg-success">Approved</span>
+                    <Form.Check
+                      type="switch"
+                      id={`switch-${_id}`}
+                      label={status ? "Approved" : "Closed"}
+                      checked={status}
+                      onChange={(e) => handleStatusToggle(_id, e.target.checked)}
+                    />
                     </td>
                     <td>
                       <EditSubCateogry id={_id} subCategory={subCategory} fetchData={() => fetchData(page)}/>
