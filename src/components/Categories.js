@@ -1,34 +1,46 @@
-import React from 'react';
-import Electronics from "../assets/images/Electronics.webp"
-import Fashion from "../assets/images/Fashion.webp"
-import Kitchen from "../assets/images/Kitchen.webp"
-import Furniture from "../assets/images/Furniture.webp"
-import Travel from "../assets/images/Travel.webp"
-import Beauty from "../assets/images/Beauty.webp"
+import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-
-const categories = [
-  { name: 'Electronics', icon: Electronics},
-  { name: 'Fashion', icon: Fashion },
-  { name: 'Home & Kitchen', icon: Kitchen },
-  { name: 'Furniture', icon: Furniture},
-  { name: 'Travel', icon: Travel },
-  { name: 'Beauty', icon: Beauty },
-];
+import { toast } from 'react-toastify';
+import AxiosInstance from '../helpers/AxiosRequest';
+import { useNavigate } from 'react-router-dom';
 
 const Categories = () => {
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await AxiosInstance.get('/category/getcategory');
+      setCategories(response?.data?.data);
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
+  };
+
+  const handleCategoryClick = (category) => {
+    navigate("/subcategory", { state: { categoryId: category._id, categoryName: category.categoryName } });
+  };
+
   return (
     <Container>
-        <div className="categories row mt-5 g-3">
-      {categories.map((category, index) => (
-        <div key={index} className="col-lg-2 col-md-4 col-sm-6 col-12">
-           <div className="p-3 border category-item">
-           <img src={category.icon} alt={category.name} />
-          <p>{category.name}</p>
-           </div>
-        </div>
-      ))}
-    </div>
+      <div className="categories row mt-5 g-3">
+        {categories.map((category) => (
+          category?.status && (
+            <div key={category._id} className="col-lg-2 col-md-4 col-sm-6 col-12">
+              <div className="p-3 border category-item" onClick={() => handleCategoryClick(category)}>
+                {category.images && category.images.map((image, index) => (
+                  <img src={image} alt={category.categoryName} className="img-fluid" key={index} />
+                ))}
+                <p className='fs-5'>{category.categoryName}</p>
+              </div>
+            </div>
+          )
+        ))}
+      </div>
     </Container>
   );
 };

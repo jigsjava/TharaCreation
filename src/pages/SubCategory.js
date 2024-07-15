@@ -1,40 +1,66 @@
-import React from 'react';
-import Electronics from "../assets/images/Electronics.webp"
-import Fashion from "../assets/images/Fashion.webp"
-import Kitchen from "../assets/images/Kitchen.webp"
-import Furniture from "../assets/images/Furniture.webp"
-import Travel from "../assets/images/Travel.webp"
-import Beauty from "../assets/images/Beauty.webp"
-import { Button, Container } from 'react-bootstrap';
-// import SearchForm from '../components/SearchForm';
-import { useNavigate } from 'react-router-dom';
-
-const categories = [
-  { name: 'Electronics', icon: Electronics,price: '500'},
-  { name: 'Fashion', icon: Fashion,price: '500' },
-  { name: 'Home & Kitchen', icon: Kitchen ,price: '500'},
-  { name: 'Furniture', icon: Furniture,price: '500'},
-  { name: 'Travel', icon: Travel ,price: '500'},
-  { name: 'Beauty', icon: Beauty ,price: '500'},
-];
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import AxiosInstance from "../helpers/AxiosRequest";
+import { toast } from "react-toastify";
 
 const SubCategory = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { categoryId, categoryName } = location.state || {};
+  const [subCategories, setSubCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchSubCategories = async () => {
+      if (categoryId) {
+        try {
+          const response = await AxiosInstance.get(
+            `/subcategory/getsubcategory?categoryId=${categoryId}`
+          );
+          setSubCategories(response?.data?.data);
+        } catch (error) {
+          toast.error("Failed to load subcategories", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      }
+    };
+    fetchSubCategories();
+  }, [categoryId]);
+
   return (
-    <Container className='mt-5'>
-      <h2 className='mt-5'>subcategory Name</h2>
-      {/* <SearchForm /> */}
+    <Container className="mt-5">
+      <h2 className="mt-5">{categoryName} Subcategories</h2>
       <div className="row mt-3 g-5">
-        {categories.map((category, index) => (
-          <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">
-            <div className="p-3 border bg-light d-flex justify-content flex-column align-items-center">
-            <img src={category.icon} alt={category.name} />
-            <p className='mt-3 text-center'>{category.name} <br /><b>{category.price}</b></p>
-            </div>
-          </div>
-        ))}
+        {subCategories?.length > 0 &&
+          subCategories.map(
+            (subcategory, index) =>
+              subcategory?.status && (
+                <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">
+                  <div className="p-3 border bg-light subcategory-block">
+                    {subcategory.images &&
+                      subcategory.images.map((image, index) => (
+                        <img
+                          src={image}
+                          alt={subcategory.name}
+                          className="img-fluid"
+                          key={index}
+                        />
+                      ))}
+                    <p className="mt-3 text-center fs-4">
+                      {subcategory.subCategoryName}
+                    </p>
+                  </div>
+                </div>
+              )
+          )}
       </div>
-      <button className="btn btn-success m-5" onClick={() =>{navigate("/productlist")}}>ProductListing</button>
+      <button
+        className="btn btn-success m-5"
+        onClick={() => navigate("/productlist")}
+      >
+        Product Listing
+      </button>
     </Container>
   );
 };

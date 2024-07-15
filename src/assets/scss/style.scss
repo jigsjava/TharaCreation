@@ -44,10 +44,11 @@ body {
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 10px;
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      justify-content: space-between;
   
       img {
         width: 60px;
@@ -159,5 +160,12 @@ body {
     }
   }
   
+    .subcategory-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
   
   

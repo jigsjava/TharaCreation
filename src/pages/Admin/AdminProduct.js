@@ -127,7 +127,7 @@ const AdminProduct = () => {
                         }
                       />
                     </td>
-                    <td>
+                    <td className="d-flex">
                       <EditProducts
                         id={_id}
                         products={products}
