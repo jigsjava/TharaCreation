@@ -28,6 +28,10 @@ const SubCategory = () => {
     fetchSubCategories();
   }, [categoryId]);
 
+  const handleSubCategoryClick = (subcategory) => {
+     navigate("/productlist", { state: { subCategoryId: subcategory._id, subCategoryName: subcategory.subCategoryName } });
+  };
+
   return (
     <Container className="mt-5">
       <h2 className="mt-5">{categoryName} Subcategories</h2>
@@ -37,7 +41,7 @@ const SubCategory = () => {
             (subcategory, index) =>
               subcategory?.status && (
                 <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">
-                  <div className="p-3 border bg-light subcategory-block">
+                  <div className="p-3 border bg-light subcategory-block" onClick={() => handleSubCategoryClick(subcategory)}>
                     {subcategory.images &&
                       subcategory.images.map((image, index) => (
                         <img
