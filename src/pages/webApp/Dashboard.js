@@ -1,7 +1,7 @@
 import React from "react";
-import SwiperSlider from "../components/SwiperSlider";
-import Categories from "../components/Categories";
-import LogOut from "./Auth/Logout";
+import SwiperSlider from "../../components/SwiperSlider";
+import Categories from "../../components/Categories";
+import LogOut from "../Auth/Logout";
 
 
 const Dashboard = () => {

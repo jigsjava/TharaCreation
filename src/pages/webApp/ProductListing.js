@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Fashion from "../assets/images/saree1.webp";
-import Kitchen from "../assets/images/saree2.webp";
-import Furniture from "../assets/images/saree3.webp";
-import Travel from "../assets/images/saree5.webp";
-import Beauty from "../assets/images/saree4.webp";
-import saree6 from "../assets/images/saree6.webp";
-import saree7 from "../assets/images/saree7.webp";
-import saree8 from "../assets/images/saree8.webp";
+
 import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
-import AxiosInstance from "../helpers/AxiosRequest";
+import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
-// import SearchForm from '../components/SearchForm';
 
 const ProductListing = () => {
   const navigate = useNavigate();
@@ -37,27 +29,34 @@ const ProductListing = () => {
     fetchSubCategories();
   }, [subCategoryId]);
 
+  const handleProductClick = (product) => {
+    navigate("/productdetails", { state: { product } });
+  };
+
   return (
     <Container>
       <h2 className="mt-5">{subCategoryName} Product Listing</h2>
-      {/* <SearchForm /> */}
       <div className="categories row mt-5 g-3">
         {products?.length > 0 &&
           products.map((product, index) => {
             const {
-              description,
               status,
               productName,
               images,
               price,
               discountPrice,
-              quantity,
             } = product;
-            const cleanedDescription = description?.replace(/<\/?p>/g, "");
+
+            const discountPercentage = discountPrice
+              ? ((price - discountPrice) / price) *100 : 0;
 
             return (
               status && (
-                <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div
+                  key={index}
+                  className="col-lg-3 col-md-4 col-sm-6 col-12"
+                  onClick={() => handleProductClick(product)}
+                >
                   <div className="p-3 border h-100 d-flex flex-column justify-content-between">
                     {images &&
                       images.map((src, index) => (
@@ -69,37 +68,23 @@ const ProductListing = () => {
                         />
                       ))}
 
-                    <p className="mt-3">Name:{productName}</p>
-                    <p>
-                      Price:
-                      {price}
-                    </p>
-                    <p>
-                      Discount Price:
-                      {discountPrice}
-                    </p>
-                    <p>
-                      Quantity:
-                      {quantity}
-                    </p>
-                    <p>
-                      Description:
-                      {cleanedDescription}
-                    </p>
+                    <p className="mt-3 fs-4">{productName}</p>
+                    <div className="d-flex flex-wrap">
+                    <span className="me-2">₹{price.toFixed(2)}</span>
+                    <span className="me-2">₹{discountPrice.toFixed(2)}</span>
+                    <span
+                      className="discount-percentage me-2"
+                      style={{ color: "green" }}
+                    >
+                      {discountPercentage.toFixed(2)}% off
+                    </span>
+                    </div>
                   </div>
                 </div>
               )
             );
           })}
       </div>
-      <button
-        className="btn btn-success m-5"
-        onClick={() => {
-          navigate("/producdetails");
-        }}
-      >
-        ProductListing
-      </button>
     </Container>
   );
 };

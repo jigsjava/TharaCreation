@@ -4,10 +4,6 @@ import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/Signup";
 import EmailVerify from "../pages/Auth/EmailVerify";
-import Dashboard from "../pages/Dashboard";
-import SubCategory from "../pages/SubCategory";
-import ProductListing from "../pages/ProductListing";
-import ProductDetails from "../pages/ProductDetails";
 import AddToCart from "../pages/AddToCart";
 import Address from "../pages/Address";
 import ProductHistory from "../pages/ProductHistory";
@@ -22,6 +18,10 @@ import AdminLayout from "../pages/Admin/SideBarLayout/AdminLayout";
 import OrderList from "../pages/Admin/OrderList";
 import Setting from "../pages/Admin/Setting";
 import AdminSlider from "../pages/Admin/AdminSlider";
+import Dashboard from "../pages/webApp/Dashboard";
+import SubCategory from "../pages/webApp/SubCategory";
+import ProductListing from "../pages/webApp/ProductListing";
+import ProductDetails from "../pages/webApp/ProductDetails";
 
 const routes = () => {
   return (
@@ -36,7 +36,7 @@ const routes = () => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/subcategory" element={<SubCategory />} />
         <Route path="/productlist" element={<ProductListing />} />
-        <Route path="/producdetails" element={<ProductDetails />} />
+        <Route path="/productdetails" element={<ProductDetails />} />
         <Route path="/addcart" element={<AddToCart />} />
         <Route path="/address" element={<Address />} />
         <Route path="/history" element={<ProductHistory />} />

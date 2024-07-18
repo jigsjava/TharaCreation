@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
-import AxiosInstance from "../helpers/AxiosRequest";
+import { Container,Row,Col } from "react-bootstrap";
+import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
+import SearchForm from "../../components/SearchForm";
 
 const SubCategory = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { categoryId, categoryName } = location.state || {};
   const [subCategories, setSubCategories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchSubCategories = async () => {
       if (categoryId) {
         try {
           const response = await AxiosInstance.get(
-            `/subcategory/getsubcategory?categoryId=${categoryId}`
+            `/subcategory/getsubcategory?searchQuery=${searchQuery}&page=${page}&categoryId=${categoryId}`
           );
           setSubCategories(response?.data?.data);
         } catch (error) {
@@ -26,15 +29,25 @@ const SubCategory = () => {
       }
     };
     fetchSubCategories();
-  }, [categoryId]);
+  }, [categoryId,searchQuery, page]);
 
   const handleSubCategoryClick = (subcategory) => {
      navigate("/productlist", { state: { subCategoryId: subcategory._id, subCategoryName: subcategory.subCategoryName } });
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setPage(1); // Reset page to 1 on search
+  };
+
   return (
     <Container className="mt-5">
-      <h2 className="mt-5">{categoryName} Subcategories</h2>
+       <Row className="mt-5 mb-3">
+        <Col md={{ span: 12, offset: 12 }} className='d-flex justify-content-end'>
+          <SearchForm onSearch={handleSearch} />
+        </Col>
+      </Row>
+      <h2 className="mt-3">{categoryName} Subcategories</h2>
       <div className="row mt-3 g-5">
         {subCategories?.length > 0 &&
           subCategories.map(
@@ -59,12 +72,6 @@ const SubCategory = () => {
               )
           )}
       </div>
-      <button
-        className="btn btn-success m-5"
-        onClick={() => navigate("/productlist")}
-      >
-        Product Listing
-      </button>
     </Container>
   );
 };
