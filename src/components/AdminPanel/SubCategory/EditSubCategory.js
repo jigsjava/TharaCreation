@@ -66,6 +66,8 @@ const EditSubCateogry = ({id,fetchData,subCategory}) => {
       .min(5, 'SubCategory name must be at least 5 characters')
       .max(30, 'SubCategory name must be at most 30 characters'),
     image: Yup.mixed()
+    .nullable()
+    .notRequired()
       .test(
         'fileSize',
         'File size must be less than 3 MB',

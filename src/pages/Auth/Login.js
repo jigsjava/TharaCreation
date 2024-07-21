@@ -11,7 +11,7 @@ const LoginSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required").min(6).max(36),
+  password: Yup.string().required("Password is required").min(4).max(36),
 });
 
 const Login = () => {

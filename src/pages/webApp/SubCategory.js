@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container,Row,Col } from "react-bootstrap";
+import { Container,Row,Col, Breadcrumb } from "react-bootstrap";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 import SearchForm from "../../components/SearchForm";
 
 const SubCategory = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { categoryId, categoryName } = location.state || {};
   const [subCategories, setSubCategories] = useState([]);
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryId = queryParams.get("id");
+  const categoryName = queryParams.get("name");
 
   useEffect(() => {
     const fetchSubCategories = async () => {
@@ -32,7 +34,7 @@ const SubCategory = () => {
   }, [categoryId,searchQuery, page]);
 
   const handleSubCategoryClick = (subcategory) => {
-     navigate("/productlist", { state: { subCategoryId: subcategory._id, subCategoryName: subcategory.subCategoryName } });
+     navigate(`/productlist?id=${subcategory._id}&name=${subcategory.subCategoryName}&categoryId=${categoryId}&categoryName=${categoryName}`);
   };
 
   const handleSearch = (query) => {
@@ -42,13 +44,17 @@ const SubCategory = () => {
 
   return (
     <Container className="mt-5">
-       <Row className="mt-5 mb-3">
+      <Breadcrumb>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Item active>subCategories</Breadcrumb.Item>
+      </Breadcrumb>
+       <Row className="mt-3 mb-3">
         <Col md={{ span: 12, offset: 12 }} className='d-flex justify-content-end'>
           <SearchForm onSearch={handleSearch} />
         </Col>
       </Row>
-      <h2 className="mt-3">{categoryName} Subcategories</h2>
-      <div className="row mt-3 g-5">
+      <h2 className="mt-3">{categoryName}</h2>
+      <div className="row mt-2 g-5">
         {subCategories?.length > 0 &&
           subCategories.map(
             (subcategory, index) =>

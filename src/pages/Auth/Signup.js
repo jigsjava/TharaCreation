@@ -19,7 +19,7 @@ const RegisterSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters").max(36, "Password must be at most 36 characters"),
+  password: Yup.string().required("Password is required").min(4, "Password must be at least 4 characters").max(36, "Password must be at most 36 characters"),
   mobile: Yup.string()
     .required("Mobile number is required")
     .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits"),
@@ -27,7 +27,6 @@ const RegisterSchema = Yup.object({
 
 function Register() {
   const navigate = useNavigate();
-  const [values, setValues] = useState({});
   const [loading, setLoading] = useState(false);
 
   const form = useFormik({
@@ -42,8 +41,8 @@ function Register() {
       //  console.log("values",values)
       setLoading(true); 
       try {
-        setValues(values);
         const response = await AxiosInstance.post(`/auth/signup`,values);
+        console.log("first",response)
         if (response.status === 200) {
           toast.success("User registered successfully", {
             position: toast.POSITION.TOP_CENTER,

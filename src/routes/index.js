@@ -4,8 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/Signup";
 import EmailVerify from "../pages/Auth/EmailVerify";
-import AddToCart from "../pages/AddToCart";
-import Address from "../pages/Address";
+import AddToCart from "../pages/webApp/AddToCart";
+import Address from "../pages/webApp/Address";
 import ProductHistory from "../pages/ProductHistory";
 import ForgotPassWord from "../pages/Auth/ForgotPassWord";
 import ProfilePage from "../pages/ProfilePage";
@@ -22,6 +22,7 @@ import Dashboard from "../pages/webApp/Dashboard";
 import SubCategory from "../pages/webApp/SubCategory";
 import ProductListing from "../pages/webApp/ProductListing";
 import ProductDetails from "../pages/webApp/ProductDetails";
+import SuccessPage from "../pages/webApp/SuccessPage"
 
 const routes = () => {
   return (
@@ -39,6 +40,7 @@ const routes = () => {
         <Route path="/productdetails" element={<ProductDetails />} />
         <Route path="/addcart" element={<AddToCart />} />
         <Route path="/address" element={<Address />} />
+        <Route path="/order-successful" element={<SuccessPage />} />
         <Route path="/history" element={<ProductHistory />} />
         <Route path="/profile" element={<ProfilePage />} />
         {/* -------Admin Dashboard ------------ */}

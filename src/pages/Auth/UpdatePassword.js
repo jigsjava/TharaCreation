@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const PasswordSchema = Yup.object().shape({
   password: Yup.string()
     .required("Password is required")
-    .min(6, "Password must be at least 6 characters")
+    .min(4, "Password must be at least 4 characters")
     .max(10, "Password must be at most 10 characters"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")

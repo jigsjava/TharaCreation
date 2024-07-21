@@ -12,7 +12,7 @@ const EmailVerifySchema = Yup.object({
     .required("Email is required"),
   otp: Yup.string()
     .required("OTP is required")
-    .min(6, "OTP must be at least 6 characters")
+    .min(4, "OTP must be at least 4 characters")
     .max(36, "OTP must be at most 36 characters"),
 });
 

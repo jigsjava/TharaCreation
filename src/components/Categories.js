@@ -10,7 +10,6 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   const limit = 4;
   const [page, setPage] = useState(1);
-  // const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -29,9 +28,7 @@ const Categories = () => {
   };
 
   const handleCategoryClick = (category) => {
-    navigate("/subcategory", {
-      state: { categoryId: category._id, categoryName: category.categoryName },
-    });
+    navigate(`/subcategory?id=${category._id}&name=${category.categoryName}`);
   };
 
   const handleSearch = (query) => {
