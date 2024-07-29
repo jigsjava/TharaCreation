@@ -62,8 +62,6 @@ const ProfilePage = () => {
         </Form>
       </Formik>
     </div>
-
-    
   );
 };
 
