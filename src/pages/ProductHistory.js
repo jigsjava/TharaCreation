@@ -1,60 +1,109 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import './ProductHistory.scss';
 import { Container } from 'react-bootstrap';
-import saree8 from "../assets/images/saree8.webp"
-import saree7 from "../assets/images/saree7.webp"
-import saree6 from "../assets/images/saree6.webp"
+import { toast } from "react-toastify";
+import PaginationComponent from "../../src/components/Pagination";
+import AxiosInstance from "../helpers/AxiosRequest";
+import SearchForm from "../components/SearchForm"
 
 const ProductHistory = () => {
-  const products = [
-    {
-      name: 'Spotify Premium - 3M at Rs 119',
-      status: 'Cancelled on Aug 08, 2023',
-      statusclassName: 'cancelled',
-      price: 'FREE',
-      imageUrl: saree8,
-      description: 'Shipment is cancelled',
-    },
-    {
-      name: 'TUPPERWARE - 1700 ml Polypropylene Groc...',
-      status: 'Delivered on Sep 29, 2022',
-      statusclassName: 'delivered',
-      price: '₹1,849',
-      imageUrl: saree7,
-      description: 'Your item has been delivered',
-    },
-    {
-      name: 'Wynona Wynona stainless steel rose gold ...',
-      status: 'Delivered on May 19, 2022',
-      statusclassName: 'delivered',
-      price: '₹290',
-      imageUrl: saree6,
-      description: 'Your item has been delivered',
-    },
-  ];
+  const limit = 5;
+  const [orders, setOrders] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const userId = JSON.parse(localStorage.getItem('user'))?.user?.id;
+
+
+  useEffect(() => {
+    fetchData(page);
+  }, [page, searchQuery]); 
+
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await AxiosInstance.get(
+        `/order/getOrder?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}&userId=${userId}`
+      );
+      setOrders(response?.data?.data);
+      setTotalPages(response?.data?.pagination?.totalPages);
+    } catch (error) {
+      toast.error("Error fetching data");
+    }
+  };
+
+  const handlePageClick = (pages) => {
+    fetchData(pages);
+    setPage(pages);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setPage(1);  
+  };
+
+  const backgroundColors = ["#fff6dc78", "#e6f7ff78"];
 
   return (
-    <Container>
-         <h1 className='mt-5 mb-3'>Your Order Details</h1>
-   
-    <div className="row mt-5 g-5">
-      {products.map((product, index) => (
-        <div key={index} className="col-lg-3 col-md-4 col-sm-6 col-12">
-           <div className="p-3 border h-100 d-flex flex-column justify-content-between" style={{borderRadius:'10px',background:'#fff6dc78'}}>
-           <div className="product-image text-center mb-3">
-              {product.imageUrl && <img src={product.imageUrl} alt={product.name} />}
-            </div>
-            <div className="product-details">
-              <h3 className='mb-4'>{product.name.length > 25 ? `${product.name.slice(0, 25)}...` : product.name}</h3>
-              <p className={`status ${product.statusclassName}`}>{product.status}</p>
-              <p className="price">{product.price}</p>
-              <p className="description">{product.description}</p>
-            </div>
-           </div>
-        </div>
-      ))}
+    <>
+   <Container>
+      <h1 className='mt-5 mb-3'>Your Order Details</h1>
+      <div className="w-100 d-flex justify-content-end my-0">
+        <SearchForm onSearch={handleSearch} />
       </div>
+      <div className="row g-4">
+        {orders &&
+          orders.map((order, orderIndex) => (
+            <div key={orderIndex} className="col-12 mb-3">
+              <h2 className='mb-3'>{`Order ${orderIndex + 1}`}</h2>
+              <div className="row g-3">
+                {order.orderItems.map((item, itemIndex) => (
+                  <div
+                    key={itemIndex}
+                    className="col-lg-3 col-md-4 col-sm-6 col-12"
+                  >
+                    <div
+                      className="p-3 border h-100 d-flex flex-column justify-content-between"
+                      style={{
+                        borderRadius: '10px',
+                        background: backgroundColors[orderIndex % backgroundColors.length],
+                      }}
+                    >
+                      <div className="product-image text-center mb-3">
+                        {item.productDetails.images && item.productDetails.images.map((images,index) =>(
+                          <img
+                            src={images}
+                            alt={index}
+                          />
+                        ))
+                        }
+                      </div>
+                      <div className="product-details">
+                        <h3 className='mb-4'>
+                          {item.productDetails.productName.length > 25
+                            ? `${item.productDetails.productName.slice(0, 25)}...`
+                            : item.productDetails.productName}
+                        </h3>
+                        <p className="quantity">{`Quantity: ${item.quantity}`}</p>
+                        <p className="price">{`Price: $${item.price}`}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+      </div>
+      {totalPages > 1 && (
+        <div className="d-flex justify-content-center mt-4">
+          <PaginationComponent
+            page={page}
+            totalPages={totalPages}
+            handlePageClick={handlePageClick}
+          />
+        </div>
+      )}
     </Container>
+    </>
   );
 };
 

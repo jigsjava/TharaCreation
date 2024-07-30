@@ -79,7 +79,7 @@ const ProductListing = () => {
 
                     <p className="mt-3 fs-4">{productName}</p>
                     <div className="d-flex flex-wrap">
-                    <span className="me-2">₹{price.toFixed(2)}</span>
+                    <span className="me-2" style={{textDecoration:'line-through'}}>₹{price.toFixed(2)}</span>
                     <span className="me-2">₹{discountPrice.toFixed(2)}</span>
                     <span
                       className="discount-percentage me-2"

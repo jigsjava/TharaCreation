@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { CartIcon } from '../../assets/icons';
 
 
 function Header() {
@@ -29,7 +30,8 @@ function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+          <Nav.Link href="/addcart"><CartIcon /></Nav.Link>
+            <Nav.Link href="/history">OrderHistory</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item onClick={handleProfile}>Profile</NavDropdown.Item>
               <NavDropdown.Item  onClick={handleLogOut}>

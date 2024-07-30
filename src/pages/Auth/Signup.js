@@ -42,7 +42,7 @@ function Register() {
       setLoading(true); 
       try {
         const response = await AxiosInstance.post(`/auth/signup`,values);
-        console.log("first",response)
+        
         if (response.status === 200) {
           toast.success("User registered successfully", {
             position: toast.POSITION.TOP_CENTER,
@@ -50,15 +50,11 @@ function Register() {
           resetForm(); 
           navigate('/emailverify')
         } 
-        // else {
-        //   toast.error(response.data.error, {
-        //     position: toast.POSITION.TOP_CENTER,
-        //   });
-        // }
+       
       } catch (err) {
         console.error("Async error:", err);
-        if (err.response && err.response.data && err.response.data.error) {
-          toast.error(err.response.data.error, {
+        if (err.response && err.response.data && err.response.data.message) {
+          toast.error(err.response.data.message, {
             position: toast.POSITION.TOP_CENTER,
           });
         } else {
