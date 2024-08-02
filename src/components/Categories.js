@@ -17,6 +17,7 @@ const Categories = () => {
   }, [searchQuery, page]);
 
   const fetchData = async () => {
+
     try {
       const response = await AxiosInstance.get(
         `/category/getcategory?searchQuery=${searchQuery}&page=${page}`
