@@ -78,6 +78,7 @@ const AddNewSubCategory = ({ fetchData }) => {
         fetchData();
         resetForm();
         setPreviewImage(null);
+        document.getElementById("image").value = "";
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -172,6 +173,7 @@ const AddNewSubCategory = ({ fetchData }) => {
                       <Form.Control
                         type="file"
                         name="image"
+                        id="image"
                         onChange={(event) => {
                           const file = event?.currentTarget?.files[0];
                           if (file) {

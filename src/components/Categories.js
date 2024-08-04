@@ -8,7 +8,6 @@ import SearchForm from "./SearchForm";
 const Categories = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  const limit = 4;
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 

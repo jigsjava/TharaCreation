@@ -63,7 +63,6 @@ const OrderList = () => {
               orders.map((order, index) => {
                 const overallIndex = (page - 1) * limit + index;
 
-                console.log("first",order)
                 const { orderItems, receiverName, address, createdAt, GrandTotal } = order;
 
                 return (

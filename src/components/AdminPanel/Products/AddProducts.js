@@ -51,7 +51,7 @@ const AddProducts = ({ fetchData }) => {
     productName: "",
     category: "",
     subcategory: "",
-    image: null,
+    image: [],
     price: "",
     discountprice: "",
     quantity: "",
@@ -74,32 +74,32 @@ const AddProducts = ({ fetchData }) => {
       .required("Discount Price is required")
       .lessThan(Yup.ref("price"), "Discount Price must be less than Price"),
     quantity: Yup.number().required("Quantity is required"),
-    image: Yup.mixed()
-      .required("Image is required")
-      .test("fileSize", "File size must be less than 3 MB", (value) => {
-        return value && value.size <= 3 * 1024 * 1024; // 3 MB in bytes
-      })
-      .test("fileFormat", "only jpg,png,webp,jpeg upload", (value) => {
-        return (
-          value &&
-          ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
-            value.type
-          )
-        );
-      }),
+    images: Yup.array().of(Yup.mixed()
+        .required("Image is required")
+        .test("fileSize", "File size must be less than 3 MB", (value) => {
+          return value && value.size <= 3 * 1024 * 1024; // 3 MB in bytes
+        })
+        .test("fileFormat", "Only jpg, png, webp, jpeg formats are allowed", (value) => {
+          return value && ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(value.type);
+        })
+    )
+    .required("Images are required"),
   });
 
   const handleSubmit = async (
     values,
     { resetForm, setErrors, setSubmitting }
   ) => {
+
     setIsLoading(true);
 
     const formData = new FormData();
     formData.append("productName", values.productName);
     formData.append("categoryId", values.category);
     formData.append("subCategoryId", values.subcategory);
-    formData.append("productImages", values.image);
+    values.images.forEach((image) => {
+      formData.append("productImages", image);
+    });
     formData.append("price", values.price);
     formData.append("discountPrice", values.discountprice);
     formData.append("quantity", values.quantity);
@@ -118,7 +118,8 @@ const AddProducts = ({ fetchData }) => {
         });
         fetchData();
         resetForm();
-        setPreviewImage(null);
+        setPreviewImage([]);
+        document.getElementById("image").value = "";
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -208,7 +209,11 @@ const AddProducts = ({ fetchData }) => {
                     </option>
                   ))}
                 </Field>
-                <ErrorMessage name="subcategory" component="div" className="font16Red"/>
+                <ErrorMessage
+                  name="subcategory"
+                  component="div"
+                  className="font16Red"
+                />
               </Form.Group>
 
               <Form.Group
@@ -234,30 +239,35 @@ const AddProducts = ({ fetchData }) => {
                 <input
                   type="file"
                   name="image"
+                  id="image"
                   className="form-control"
+                  multiple
                   onChange={(event) => {
-                    const file = event?.currentTarget?.files[0];
-                    if (file) {
-                      setFieldValue("image", file);
-                      setPreviewImage(URL.createObjectURL(file));
+                    const files = Array.from(event.currentTarget.files);
+                    if (files) {
+                      setFieldValue("images", files);
+                      setPreviewImage(
+                        files.map((file) => URL.createObjectURL(file))
+                      );
                     }
                   }}
                 />
-                {touched.image && errors.image ? (
-                  <div className="font16Red">{errors.image}</div>
-                ) : null}
+                {touched.images && errors.images && (
+                  <div className="font16Red">{errors.images}</div>
+                )}
               </Form.Group>
 
-              {previewImage && (
-                <div className="mb-3">
-                  <Image
-                    src={previewImage}
-                    alt="Preview"
-                    thumbnail
-                    width={100}
-                  />
-                </div>
-              )}
+              {previewImage &&
+                previewImage.map((image, index) => (
+                  <div key={index} className="mb-3">
+                    <Image
+                      src={image}
+                      alt={`Preview ${index}`}
+                      thumbnail
+                      width={100}
+                    />
+                  </div>
+                ))}
 
               <Form.Group className="mb-3 col-md-4 col-sm-6" controlId="price">
                 <Form.Label>Price</Form.Label>

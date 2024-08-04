@@ -49,7 +49,8 @@ const TextEditor = ({ value, onChange }) => {
           direction: "ltr",
           background:'#ffffff',
           border:'1px solid #dee2e6',
-          borderRadius:'6px'
+          borderRadius:'6px',
+          padding:'0 10px'
         }}
       />
       {/* <textarea

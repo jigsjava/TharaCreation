@@ -96,7 +96,7 @@ const AdminProduct = () => {
                     <td>{categoryData?.categoryName}</td>
                     <td>{subCategoryData?.subCategoryName}</td>
                     <td>{productName}</td>
-                    <td>
+                    <td className="d-flex" style={{overflow:'auto'}}>
                       {images &&
                         images?.map((image, index) => (
                           <Image

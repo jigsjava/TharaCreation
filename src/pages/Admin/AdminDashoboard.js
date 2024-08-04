@@ -14,7 +14,7 @@ useEffect(() => {
   const fetchData = async () => {
     try {
       const response = await AxiosInstance.get(
-        `/order/totalcount`
+        `/dashboard/totalcount`
       );
       console.log("first",response)
       setCount(response?.data);

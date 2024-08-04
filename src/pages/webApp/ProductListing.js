@@ -37,6 +37,16 @@ const ProductListing = () => {
     navigate("/productdetails", { state: { product } });
   };
 
+  const getMaxHeight = (length) => {
+    if (length === 3) {
+      return "100px";
+    } else if (length === 5) {
+      return "70px";
+    } else {
+      return "350px"; // Default max height for other lengths
+    }
+  };
+
   return (
     <Container className="mt-5">
        <Breadcrumb>
@@ -72,8 +82,8 @@ const ProductListing = () => {
                         <img
                           src={src}
                           alt={index}
-                          className="img-fluid"
-                          style={{ maxHeight: "350px" }}
+                          className="img-fluid mb-2"
+                          style={{ maxHeight: getMaxHeight(images.length)}}
                         />
                       ))}
 

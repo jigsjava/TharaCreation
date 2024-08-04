@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import FreqBought from "../../components/FreqBought";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Breadcrumb, Container } from "react-bootstrap";
+import { CartContext } from "../../Context/CartContext";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
+   const { cartItems, setCartItems } = useContext(CartContext);
   const { product } = location.state || {};
 
   const handleAddToCart = (product) => {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     const existingProduct = cartItems.find((item) => item._id === product._id);
 
     if (!existingProduct) {
@@ -22,8 +23,7 @@ const ProductDetails = () => {
         quantity: 1,
         TotalQuantity:product.quantity-1
       };
-      cartItems.push(productToStore);
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      setCartItems([...cartItems, productToStore]);
     }
     navigate("/addcart");
   };
@@ -35,6 +35,16 @@ const ProductDetails = () => {
   const discountPercentage = product.discountPrice
     ? ((product.price - product.discountPrice) / product.price) * 100
     : 0;
+
+    const getMaxHeight = (length) => {
+      if (length === 3) {
+        return "100px";
+      } else if (length === 5) {
+        return "70px";
+      } else {
+        return "350px"; // Default max height for other lengths
+      }
+    };
 
   return (
     <Container className="mt-5">
@@ -58,10 +68,11 @@ const ProductDetails = () => {
             {product.images?.length > 0 ? (
               product.images.map((image, index) => (
                 <img
+                className="img-fluid mb-2"
                   key={index}
                   src={image}
                   alt={`${product.productName}-${index}`}
-                  style={{ maxHeight: "400px", maxWidth: "350px" }}
+                  style={{ maxHeight:getMaxHeight(product.images?.length), maxWidth: "350px" }}
                 />
               ))
             ) : (

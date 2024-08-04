@@ -6,7 +6,6 @@ import { useFormik } from "formik";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
 
-
 const LoginSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
@@ -38,12 +37,13 @@ const Login = () => {
             position: toast.POSITION.TOP_CENTER,
           });
           localStorage.setItem("accessToken", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("user", JSON.stringify(response.data.user));
           resetForm(); 
           navigate("/");
         } 
       }
       catch (err) {
+        console.log("first",err)
         if (err.response && err.response.data && err.response.data.error) {
           toast.error(err.response.data.error, {
             position: toast.POSITION.TOP_CENTER,

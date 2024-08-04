@@ -12,8 +12,7 @@ const ProductHistory = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const userId = JSON.parse(localStorage.getItem('user'))?.user?.id;
-
+ 
 
   useEffect(() => {
     fetchData(page);
@@ -22,7 +21,7 @@ const ProductHistory = () => {
   const fetchData = async (pageNumber) => {
     try {
       const response = await AxiosInstance.get(
-        `/order/getOrder?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}&userId=${userId}`
+        `/order/getOrder?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}`
       );
       setOrders(response?.data?.data);
       setTotalPages(response?.data?.pagination?.totalPages);
