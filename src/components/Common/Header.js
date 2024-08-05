@@ -16,6 +16,7 @@ function Header() {
     const handleLogOut = () => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
+        localStorage.removeItem("cartItems");
         toast.success("Successfully Logged Out", {
             position: toast.POSITION.TOP_CENTER,
           });

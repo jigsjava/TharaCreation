@@ -23,6 +23,7 @@ import ProductListing from "../pages/webApp/ProductListing";
 import ProductDetails from "../pages/webApp/ProductDetails";
 import SuccessPage from "../pages/webApp/SuccessPage";
 import PrivateRoute from './PrivateRoute'; // Import the PrivateRoute component
+import AdminRoute from "./AdminRoute";
 
 const routes = () => {
   return (
@@ -46,14 +47,77 @@ const routes = () => {
       <Route path="/history" element={<PrivateRoute element={<ProductHistory />} />} />
       <Route path="/profile" element={<PrivateRoute element={<ProfilePage />} />} />
 
-      {/* Admin Routes */}
-      <Route path="/admindashboard" element={<PrivateRoute element={<AdminLayout><AdminDashoboard /></AdminLayout>} />} />
-      <Route path="/categorymanager" element={<PrivateRoute element={<AdminLayout><CategoryManager /></AdminLayout>} />} />
-      <Route path="/adminsubcategory" element={<PrivateRoute element={<AdminLayout><AdminSubCategory /></AdminLayout>} />} />
-      <Route path="/adminaddproduct" element={<PrivateRoute element={<AdminLayout><AdminAddProduct /></AdminLayout>} />} />
-      <Route path="/order" element={<PrivateRoute element={<AdminLayout><OrderList /></AdminLayout>} />} />
-      <Route path="/adminslider" element={<PrivateRoute element={<AdminLayout><AdminSlider /></AdminLayout>} />} />
-      <Route path="/setting" element={<PrivateRoute element={<AdminLayout><Setting /></AdminLayout>} />} />
+     {/* Admin Routes */}
+     <Route
+        path="/admindashboard"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminDashoboard />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/categorymanager"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <CategoryManager />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/adminsubcategory"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminSubCategory />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/adminaddproduct"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminAddProduct />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/order"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <OrderList />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/adminslider"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminSlider />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/setting"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <Setting />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
     </Routes>
   );
 };

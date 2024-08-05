@@ -21,6 +21,7 @@ const OrderList = () => {
       const response = await AxiosInstance.get(
         `/order/getOrder?page=${pageNumber}&limit=${limit}&searchQuery=${searchQuery}`
       );
+      
       setOrders(response?.data?.data);
       setTotalPages(response?.data?.pagination?.totalPages);
     } catch (error) {
