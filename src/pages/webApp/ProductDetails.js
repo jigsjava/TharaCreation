@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import FreqBought from "../../components/FreqBought";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Breadcrumb, Container } from "react-bootstrap";
 import { CartContext } from "../../Context/CartContext";
@@ -124,7 +123,6 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        <FreqBought />
       </div>
     </Container>
   );

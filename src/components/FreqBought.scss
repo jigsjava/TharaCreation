@@ -6,7 +6,7 @@
   
     h2 {
       margin-bottom: 16px;
-      font-size: 18px;
+      font-size: 24px;
       font-weight: bold;
     }
   
@@ -16,7 +16,7 @@
   
       .product {
         position: relative;
-        width: 250px;
+        max-width: 350px;
         text-align: center;
   
         img {

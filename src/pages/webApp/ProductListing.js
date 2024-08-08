@@ -3,6 +3,7 @@ import { Breadcrumb, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import AxiosInstance from "../../helpers/AxiosRequest";
 import { toast } from "react-toastify";
+import FreqBought from "../../components/FreqBought";
 
 const ProductListing = () => {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ const ProductListing = () => {
                           src={src}
                           alt={index}
                           className="img-fluid mb-2"
-                          style={{ maxHeight: getMaxHeight(images.length)}}
+                          style={{ height: getMaxHeight(images.length)}}
                         />
                       ))}
 
@@ -104,6 +105,8 @@ const ProductListing = () => {
             );
           })}
       </div>
+
+      <FreqBought />
     </Container>
   );
 };
