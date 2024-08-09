@@ -6,6 +6,8 @@ import PaginationComponent from "../../src/components/Pagination";
 import AxiosInstance from "../helpers/AxiosRequest";
 import SearchForm from "../components/SearchForm"
 import { useNavigate } from "react-router-dom";
+import ReviewForm from "../components/AdminPanel/ReviewForm";
+import { CloudWatchLogs } from "aws-sdk";
 
 const ProductHistory = () => {
   const navigate = useNavigate();
@@ -14,7 +16,11 @@ const ProductHistory = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
- 
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [productId, setProductId] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [review, setReview] = useState(null);
+
 
   useEffect(() => {
     fetchData(page);
@@ -27,6 +33,8 @@ const ProductHistory = () => {
       );
       setOrders(response?.data?.data);
       setTotalPages(response?.data?.pagination?.totalPages);
+
+
     } catch (error) {
       toast.error("Error fetching data");
     }
@@ -42,7 +50,16 @@ const ProductHistory = () => {
     setPage(1);  
   };
 
+  const openReviewForm = (productId,orderId) => {
+    setProductId(productId);
+    setOrderId(orderId)
+    setShowReviewForm(true);
+  };
+
+  
   const backgroundColors = ["#fff6dc78", "#e6f7ff78"];
+
+  console.log("fsfsfsfsfsfsafsffwsff",review)
 
   return (
     <>
@@ -53,7 +70,9 @@ const ProductHistory = () => {
       </div>
       <div className="row g-4">
         {orders.length > 0 ?
-          (orders.map((order, orderIndex) => (
+          (orders.map((order, orderIndex) => {
+            const orderId = order._id
+            return(
             <div key={orderIndex} className="col-12 mb-3">
               <h2 className='mb-3'>{`Order ${orderIndex + 1}`}</h2>
               <div className="row g-3">
@@ -86,13 +105,19 @@ const ProductHistory = () => {
                         </h3>
                         <p className="quantity">{`Quantity: ${item.quantity}`}</p>
                         <p className="price">{`Price: $${item.price}`}</p>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => openReviewForm(item.product_id,orderId)}
+                          >
+                            Add Review
+                          </button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          ))):(
+)})):(
             <div className="d-flex flex-column justify-content-center align-items-center mt-5" >
           <div className='d-flex flex-column align-items-center p-3 p-md-5 col-lg-6 col-md-8 col-12' style={{borderRadius:'16px',border:'1px solid #ddd'}}>
           <h3>Your dont have any order yet!</h3>
@@ -120,6 +145,15 @@ const ProductHistory = () => {
           />
         </div>
       )}
+      {showReviewForm && productId && orderId &&(
+        
+          <ReviewForm
+            productId={productId}
+            orderId= {orderId}
+            onClose={() => setShowReviewForm(false)}
+            setReview={setReview}
+          />
+        )}
     </Container>
     </>
   );
